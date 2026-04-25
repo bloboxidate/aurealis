@@ -93,16 +93,16 @@ export default function Navbar() {
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 group"
           >
             <BrandWordmark
-              width={200}
-              height={64}
-              className="h-10 sm:h-11 md:h-12 w-auto transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.02]"
+              width={300}
+              height={96}
+              className="h-12 w-auto sm:h-14 md:h-16 max-w-[min(300px,42vw)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.02]"
             />
           </Link>
 
           <div className="flex-1 flex items-center justify-end gap-4 sm:gap-6 pl-2">
             <Link
               href={`/${otherLocale}`}
-              className="text-[10px] tracking-[0.2em] uppercase font-bold text-ink/40 nav-link-lux min-h-[44px] min-w-[40px] inline-flex items-center justify-center"
+              className="shrink-0 min-h-11 min-w-11 sm:min-h-12 sm:min-w-12 inline-flex items-center justify-center rounded-full border border-ink/12 bg-petal/50 px-3 sm:px-4 text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase font-bold text-ink/60 hover:text-apricot hover:border-apricot/40 transition-colors"
               style={{ fontFamily: 'var(--font-ui)' }}
             >
               {otherLocale === 'ar' ? 'عربي' : 'EN'}

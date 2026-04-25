@@ -6,6 +6,8 @@ E-commerce storefront for a cosmetics brand: **Next.js 16 (App Router)**, **Reac
 
 **Last updated:** 2026-04-24
 
+**Brand & UI (at a glance):** The site uses a **mood-board palette** in `app/globals.css` and shared components. The **Auréalis wordmark** appears in the **navbar** (center), the **home hero** (large, right column on desktop / center on mobile) via `components/BrandWordmark.tsx`, and the **footer** (`public/logo-black.png`). The **locale toggle** (English / Arabic) is the pill control in the top bar (switches to `/en/...` or `/ar/...`).
+
 ---
 
 ## Quick start (storefront)
@@ -47,13 +49,16 @@ Copy `.env.example` to `.env.local` and fill in values. For Paymob, set at least
 ```
 app/                 # App Router: root + [locale]/* routes
   api/paymob/        # paymob/ready, init, return
-components/          # Shared UI
+components/          # Shared UI (e.g. Navbar, Footer, BrandWordmark, ProductCard)
 i18n/                # next-intl routing + request config
 lib/                 # data, store, supabase, paymob, cart validation
 messages/            # en.json, ar.json
 middleware.ts        # next-intl locale handling
+public/              # logo-orange.png, logo-black.png, submark, loader art (Git LFS for binaries per .gitattributes)
 admin/               # second Next app: login + protected dashboard
 ```
+
+Wordmarks and submarks live under `public/`; hero/nav use `BrandWordmark` (orange on petal), footer uses the black logo in `components/Footer.tsx`.
 
 For diagrams and deeper detail, read [ARCHITECTURE.md](./ARCHITECTURE.md).
 

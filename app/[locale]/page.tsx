@@ -95,16 +95,16 @@ export default async function HomePage() {
           </div>
           <div className="relative flex flex-col items-center gap-6 animate-float-logo">
             <BrandWordmark
-              width={420}
-              height={126}
-              boxClassName="w-[min(400px,88vw)] drop-shadow-2xl"
+              width={560}
+              height={168}
+              boxClassName="w-[min(560px,92vw)] max-w-[95vw] drop-shadow-2xl"
               className="w-full h-auto"
               priority
             />
             <div className="flex gap-2 opacity-80">
-              <Sparkle className="w-3 h-3 text-apricot animate-sparkle-float" />
-              <Sparkle className="w-2 h-2 text-honey animate-sparkle-float-delayed" />
-              <Sparkle className="w-2.5 h-2.5 text-lavender animate-sparkle-drift" />
+              <Sparkle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-apricot animate-sparkle-float" />
+              <Sparkle className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-honey animate-sparkle-float-delayed" />
+              <Sparkle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-lavender animate-sparkle-drift" />
             </div>
           </div>
         </div>

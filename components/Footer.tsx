@@ -15,13 +15,14 @@ export default function Footer() {
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 pt-16 lg:pt-20 pb-16 lg:pb-20">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-10">
           <div className="max-w-md space-y-5 lg:col-span-1">
-            <div className="w-24 opacity-90">
+            <div className="w-44 sm:w-52 max-w-full opacity-95">
               <Image
                 src="/logo-black.png"
                 alt="Auréalis"
-                width={160}
-                height={48}
+                width={320}
+                height={96}
                 className="w-full h-auto object-contain object-left"
+                sizes="(max-width: 640px) 176px, 208px"
               />
             </div>
             <p className="text-ink/55 text-sm leading-relaxed" style={{ fontFamily: 'var(--font-body)' }}>
