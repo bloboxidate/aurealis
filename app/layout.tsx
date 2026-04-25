@@ -5,6 +5,10 @@ import { InitialLoadOverlay } from '@/components/InitialLoadOverlay';
 export const metadata: Metadata = {
   title: 'Auréalis',
   description: 'Beauty Inspired by the Golden Light',
+  icons: {
+    icon: [{ url: '/icon.png', type: 'image/png' }],
+    apple: [{ url: '/apple-icon.png', type: 'image/png' }],
+  },
 };
 
 /** width=device-width, safe areas for notches, user zoom allowed (accessibility). */

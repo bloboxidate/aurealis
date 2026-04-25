@@ -10,7 +10,7 @@ const intl = createMiddleware(routing);
  * 1) Global API rate cap (in-memory, per instance).
  * 2) next-intl for all non-API page routes.
  */
-export default function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith('/api/')) {
     const limited = rateLimitApiRequest(request);
     if (limited) {
@@ -22,7 +22,5 @@ export default function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    '/((?!_next|_vercel|.*\\..*).*)',
-  ],
+  matcher: ['/((?!_next|_vercel|.*\\..*).*)'],
 };

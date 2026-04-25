@@ -53,7 +53,7 @@ components/          # Shared UI (e.g. Navbar, Footer, BrandWordmark, ProductCar
 i18n/                # next-intl routing + request config
 lib/                 # data, store, supabase, paymob, cart validation
 messages/            # en.json, ar.json
-middleware.ts        # next-intl locale handling
+proxy.ts             # next-intl locale handling + /api/* rate cap (Next.js 16+ proxy)
 public/              # logo-orange.png, logo-black.png, submark, loader art (Git LFS for binaries per .gitattributes)
 admin/               # second Next app: login + protected dashboard
 ```

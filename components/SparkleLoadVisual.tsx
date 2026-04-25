@@ -27,6 +27,7 @@ export function SparkleLoadVisual({ size = 120, className = '', priority = false
           height={size}
           className="sparkle-loader-img h-auto w-full object-contain"
           priority={priority}
+          fetchPriority={priority ? 'high' : 'auto'}
         />
       </div>
     </div>

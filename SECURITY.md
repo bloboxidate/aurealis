@@ -12,7 +12,7 @@ This file explains what the **application** does to reduce common web risks, and
 |------|-------------|
 | **XSS (stored/reflected in UI)** | React renders text safely by default; no `dangerouslySetInnerHTML` in app code. Paymob checkout fields are **sanitized** server-side before external APIs. **Content-Security-Policy** (see `next.config.ts`) limits script, frame, and object sources. |
 | **CSRF to JSON APIs** | Paymob `POST /api/paymob/init` checks **Origin** against your site URL in production. Same-site form posts are the normal browser case. |
-| **Brute force (API / admin login)** | **Per-IP rate limits:** global `middleware` for all `/api/*` (configurable `API_RATE_MAX_PER_MIN`); stricter limit on `POST /api/paymob/init` and on Paymob return redirect; admin login throttled with `checkLoginRate`. |
+| **Brute force (API / admin login)** | **Per-IP rate limits:** `proxy.ts` for all `/api/*` (configurable `API_RATE_MAX_PER_MIN`); stricter limit on `POST /api/paymob/init` and on Paymob return redirect; admin login throttled with `checkLoginRate`. |
 | **DoS (application layer)** | JSON **body size caps** (e.g. init 32KB, admin login 24KB). In-memory **rate limits** (per process). |
 | **SQL injection** | The storefront does not run raw SQL. **Supabase** (when used) should only use the client / parameterized queries, never string-concatenated SQL. |
 | **Command injection** | No shell execution in app code. |

@@ -39,7 +39,7 @@ export default function Navbar() {
       }`}
     >
       <div className="max-w-[1600px] mx-auto pl-[max(0.5rem,env(safe-area-inset-left,0px))] pr-[max(0.5rem,env(safe-area-inset-right,0px))] sm:pl-[max(1.5rem,env(safe-area-inset-left,0px))] sm:pr-[max(1.5rem,env(safe-area-inset-right,0px))] lg:pl-[max(2.5rem,env(safe-area-inset-left,0px))] lg:pr-[max(2.5rem,env(safe-area-inset-right,0px))]">
-        <div className="relative flex items-center h-[72px] sm:h-[76px] md:h-[88px]">
+        <div className="relative flex items-center h-24 sm:h-28">
           {/* Left — equal width for optical centering of wordmark */}
           <div className="flex-1 flex items-center justify-start min-w-0 pr-2">
             <nav className="hidden md:flex items-center gap-6 lg:gap-8 flex-wrap">
@@ -93,9 +93,11 @@ export default function Navbar() {
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 group"
           >
             <BrandWordmark
-              width={300}
-              height={96}
-              className="h-12 w-auto sm:h-14 md:h-16 max-w-[min(300px,42vw)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.02]"
+              width={480}
+              height={154}
+              boxClassName="h-20 w-auto sm:h-24 md:h-28 max-w-[min(500px,78vw)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.02]"
+              sizes="(max-width: 768px) 78vw, 500px"
+              priority
             />
           </Link>
 

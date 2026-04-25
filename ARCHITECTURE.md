@@ -6,7 +6,7 @@
 
 **Branding (logo & locale)** — The orange wordmark is `components/BrandWordmark.tsx` (PNG at `public/logo-orange.png`, multiply blend on `petal`); the home hero uses a **large** centered wordmark; the same component is used in the **navbar** (center, scaled by responsive height). The footer uses the black lockup at `public/logo-black.png` (larger than icon-only, readable on all breakpoints). The **language switch** (EN / عربي) is a `Link` in `components/Navbar.tsx` to the sibling locale; it is styled as a pill control for visibility, not body-microcopy. Change sizes in those three places if you re-tune layout.
 
-**Security** — See [SECURITY.md](./SECURITY.md). Summary: `middleware` rate-limits `/api/*`, Paymob `init` uses Zod + body size limits + sanitization, `next.config` sets CSP/COOP/CORP/HSTS (when enabled), no raw SQL, Supabase is lazy-initialized. DDoS and global abuse require WAF/edge; in-memory rate limits are per process.
+**Security** — See [SECURITY.md](./SECURITY.md). Summary: `proxy.ts` (Next.js 16 “proxy” convention) rate-limits `/api/*`, Paymob `init` uses Zod + body size limits + sanitization, `next.config` sets CSP/COOP/CORP/HSTS (when enabled), no raw SQL, Supabase is lazy-initialized. DDoS and global abuse require WAF/edge; in-memory rate limits are per process.
 
 This document describes how the repository is structured and how major pieces interact. Pair it with `.env.example` for environment variables.
 
@@ -19,7 +19,7 @@ flowchart TB
   subgraph storefront["Storefront (Next.js, port 3000)"]
     UI["app/[locale]/* pages"]
     API["app/api/paymob/*"]
-    MW["middleware.ts — next-intl"]
+    MW["proxy.ts — next-intl + /api/* rate limit"]
     UI --> MW
     UI --> API
   end
@@ -47,7 +47,7 @@ flowchart TB
 |------|------|
 | `app/[locale]/` | Localized pages: home, shop, product, cart, checkout, content (about, contact, FAQ, legal, shipping), search, account placeholder. |
 | `app/page.tsx` | Root entry; delegates to locale routing as configured. |
-| `middleware.ts` | `next-intl` — locale detection; `matcher` excludes `api`, `_next`, static files. |
+| `proxy.ts` | `next-intl` locale + global `/api/*` rate limit; `matcher` excludes static assets. |
 | `i18n/` | `routing.ts`, `request.ts` — locales `en` / `ar`, message loading. |
 | `messages/` | `en.json`, `ar.json` — all user-facing copy. |
 | `components/` | Shared UI: `Navbar`, `Footer`, `ProductCard`, `ContentPageLayout`, etc. |
@@ -77,7 +77,7 @@ flowchart TB
 
 **Why a second app?** Isolation: different port, no shared public routes, and you can block it at the firewall or reverse proxy. Do not expose admin URLs on the public internet without hardening (VPN, IP allowlist, strong secrets).
 
-**Note:** There is no shared middleware using Edge for admin session — protection is **server layouts** + API checks so `node:crypto` stays on the Node server runtime.
+**Note:** There is no shared `proxy` / route guard for the admin app session in the storefront — admin protection is **server layouts** + API checks so `node:crypto` stays on the Node server runtime.
 
 ---
 
@@ -114,4 +114,4 @@ flowchart TB
 ## Maintenance
 
 - When adding routes, data sources, or third-party APIs, update **this file** and the **“Project structure”** section of `README.md`.
-- When bumping **Next.js** or **next-intl**, re-check `middleware` / `proxy` naming (Next 16 may deprecate `middleware.ts` in favor of `proxy.ts` for the i18n wrapper).
+- When bumping **Next.js** or **next-intl**, re-check `proxy.ts` and `createNextIntlPlugin`—Next 16 uses the **proxy** file convention instead of `middleware.ts`.
