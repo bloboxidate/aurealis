@@ -1,26 +1,353 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+  Auréalis — mood board palette:
+  #fff9f3 #f7d595 #a5bf97 #bfb5e8 #f8ae7f
+  Type: Cormorant (TAN Twinkle / The Seasons / Pushkin), Optima body, Syne UI
+*/
+@theme {
+  --color-petal:   #fff9f3;
+  --color-honey:   #f7d595;
+  --color-sage:    #a5bf97;
+  --color-lavender:#bfb5e8;
+  --color-apricot: #f8ae7f;
+  --color-apricot-deep: color-mix(in srgb, #f8ae7f 72%, #a5bf97 28%);
+  --color-ink: oklch(from #a5bf97 calc(l * 0.42) calc(c * 0.95) h);
+  --color-ink-deep: oklch(from #a5bf97 calc(l * 0.28) calc(c * 0.9) h);
+  --color-ink-abyss: oklch(from #a5bf97 calc(l * 0.22) calc(c * 0.88) h);
+  --color-muted-foreground: color-mix(in srgb, #a5bf97 58%, #f7d595 28%, #f8ae7f 14%);
+  --color-border: color-mix(in srgb, #f7d595 42%, #fff9f3 58%);
+  --color-cream:  var(--color-petal);
+  --color-light:  color-mix(in srgb, var(--color-petal) 55%, var(--color-honey) 45%);
+  --color-orange: var(--color-apricot);
+  --color-orange-dark: var(--color-apricot-deep);
+  --color-dark: var(--color-ink);
+  --color-muted: var(--color-muted-foreground);
+  --color-white: var(--color-petal);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@supports not (color: oklch(from #a5bf97 l c h)) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --color-ink: #3d4a3a;
+    --color-ink-deep: #2a3328;
+    --color-ink-abyss: #1e251d;
   }
 }
 
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-petal);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+  max-width: 100%;
+  -webkit-tap-highlight-color: color-mix(in srgb, var(--color-apricot) 12%, transparent);
+  /* Body default: Optima stack in layout; display/UI use next/font/local (see app/fonts/self-hosted.ts) */
+}
+
+/* Long words (URLs, product names) + RTL: avoid horizontal scroll on narrow viewports */
+[lang] {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* iOS Safari: focused inputs with font-size < 16px trigger page zoom; override utility classes on narrow viewports. */
+@media (max-width: 40rem) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  textarea,
+  select {
+    font-size: 1rem !important;
+    line-height: 1.4;
+  }
+}
+
+::selection {
+  background: var(--color-honey);
+  color: var(--color-ink);
+}
+
+:root {
+  /* Mood board: TAN Twinkle, The Seasons, Pushkin — web stack anchors on Cormorant */
+  --font-display: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --font-body:    Optima, Candara, Georgia, "Times New Roman", serif;
+  --font-ui:      var(--font-syne), "Trebuchet MS", system-ui, sans-serif;
+  --text-hero:    clamp(2.75rem, 7.5vw, 5.5rem);
+  --text-hero-tight: 0.95;
+  /* Prestige motion: long, decelerate-heavy curves */
+  --ease-luxury: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-lux-hover: 0.55s;
+  --duration-lux-reveal: 1s;
+}
+
+/* Subtle paper grain (palette-only noise via opacity) */
+.grain {
+  position: relative;
+}
+.grain::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+}
+
+.mesh-hero {
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 40%, color-mix(in srgb, #f8ae7f 50%, transparent), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 80% 20%, color-mix(in srgb, #bfb5e8 40%, transparent), transparent 50%),
+    radial-gradient(ellipse 50% 50% at 100% 80%, color-mix(in srgb, #a5bf97 35%, transparent), transparent 45%),
+    var(--color-petal);
+}
+
+/* Very slow “living” light in hero — like sun moving across silk */
+@keyframes mesh-ambient {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1) translate(0, 0);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.04) translate(2%, -1.5%);
+  }
+}
+.mesh-hero--ambient {
+  position: relative;
+}
+.mesh-hero--ambient::before {
+  content: "";
+  position: absolute;
+  inset: -5%;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 55% 45% at 45% 55%,
+    color-mix(in srgb, #f8ae7f 22%, transparent),
+    transparent 58%
+  );
+  animation: mesh-ambient 22s ease-in-out infinite;
+  z-index: 0;
+}
+.mesh-hero--ambient > * {
+  position: relative;
+  z-index: 1;
+}
+
+.nav-elevate {
+  box-shadow: 0 1px 24px color-mix(in srgb, #a5bf97 12%, transparent);
+}
+
+.brand-gradient {
+  background: linear-gradient(135deg, #f8ae7f 0%, #f7d595 32%, #bfb5e8 58%, #a5bf97 100%);
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.animate-marquee { animation: marquee 36s linear infinite; will-change: transform; }
+.animate-marquee:hover { animation-play-state: paused; }
+
+@keyframes float-soft {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(-3deg); }
+}
+.animate-float-logo { animation: float-soft 7s ease-in-out infinite; }
+
+@keyframes sparkle-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.45; }
+  50% { transform: translateY(-6px) rotate(8deg); opacity: 0.9; }
+}
+.animate-sparkle-float { animation: sparkle-float 4.2s ease-in-out infinite; }
+.animate-sparkle-float-delayed { animation: sparkle-float 3.4s ease-in-out infinite 0.6s; }
+.animate-sparkle-drift { animation: sparkle-float 5s ease-in-out infinite 1.1s; }
+
+@keyframes cta-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, #f8ae7f 0%, transparent); }
+  50% { box-shadow: 0 0 32px 4px color-mix(in srgb, #f8ae7f 30%, #f7d595 20%); }
+}
+.btn-hero-cta {
+  transition: transform var(--duration-lux-hover) var(--ease-luxury), background-color 0.35s var(--ease-luxury),
+    box-shadow 0.5s var(--ease-luxury);
+}
+.btn-hero-cta:hover { transform: translateY(-2px); animation: cta-pulse 2s ease-in-out infinite; }
+
+/* Refined underlines: background-size (RTL-friendly) */
+.nav-link-lux {
+  position: relative;
+  padding-bottom: 2px;
+  background: linear-gradient(var(--color-apricot), var(--color-apricot)) 0 100% / 0% 1px no-repeat;
+  transition: color var(--duration-lux-hover) var(--ease-luxury), background-size 0.5s var(--ease-luxury);
+}
+.nav-link-lux:hover {
+  background: linear-gradient(var(--color-apricot), var(--color-apricot)) 0 100% / 100% 1px no-repeat;
+  color: var(--color-apricot);
+}
+.link-lux {
+  padding-bottom: 2px;
+  background: linear-gradient(var(--color-apricot), var(--color-apricot)) 0 100% / 0% 1px no-repeat;
+  transition: color var(--duration-lux-hover) var(--ease-luxury), background-size 0.5s var(--ease-luxury);
+}
+.link-lux:hover {
+  background: linear-gradient(var(--color-apricot), var(--color-apricot)) 0 100% / 100% 1px no-repeat;
+  color: var(--color-apricot);
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.reveal-children > * { animation: fade-up 0.7s ease backwards; }
+.reveal-children > *:nth-child(1) { animation-delay: 0.05s; }
+.reveal-children > *:nth-child(2) { animation-delay: 0.12s; }
+.reveal-children > *:nth-child(3) { animation-delay: 0.2s; }
+.reveal-children > *:nth-child(4) { animation-delay: 0.28s; }
+.reveal-children > *:nth-child(5) { animation-delay: 0.35s; }
+
+.ticker-skew { transform: skewY(-1.2deg); }
+.ticker-unskew { transform: skewY(1.2deg); }
+
+/* —— Branded sparkle loader (public/sparkle-loader.png) —— */
+@keyframes sparkle-loader-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes sparkle-loader-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 6px color-mix(in srgb, #f8ae7f 40%, transparent));
+  }
+  50% {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 22px color-mix(in srgb, #f8ae7f 70%, #f7d595 20%));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sparkle-loader-rotate,
+  .sparkle-loader-breathe {
+    animation: none !important;
+  }
+  .sparkle-loader-breathe {
+    filter: drop-shadow(0 0 10px color-mix(in srgb, #f8ae7f 45%, transparent));
+  }
+  .mesh-hero--ambient::before {
+    animation: none !important;
+    opacity: 0.45;
+  }
+  .bento-sheen-layer::after,
+  .scroll-hint-line,
+  .animate-marquee,
+  .animate-float-logo,
+  .animate-sparkle-float,
+  .animate-sparkle-float-delayed,
+  .animate-sparkle-drift,
+  .reveal-children > *,
+  .btn-hero-cta:hover,
+  .lux-page-shell {
+    animation: none !important;
+  }
+  .lux-page-shell {
+    opacity: 1;
+  }
+  .reveal-children > * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+.sparkle-loader-rotate {
+  animation: sparkle-loader-rotate 14s linear infinite;
+}
+.sparkle-loader-breathe {
+  animation: sparkle-loader-breathe 2.2s ease-in-out infinite;
+}
+.sparkle-loader-img {
+  mix-blend-mode: multiply;
+}
+
+/* Soft brand sheen for large panels (bento) — not a neon sweep */
+@keyframes bento-sheen {
+  0%,
+  100% {
+    transform: translateX(-40%) translateY(10%) rotate(8deg) scale(1);
+    opacity: 0;
+  }
+  40%,
+  55% {
+    opacity: 0.2;
+  }
+  50% {
+    transform: translateX(35%) translateY(-5%) rotate(8deg) scale(1.1);
+  }
+}
+.bento-sheen-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.bento-sheen-layer::after {
+  content: "";
+  position: absolute;
+  width: 55%;
+  height: 160%;
+  top: -30%;
+  left: -20%;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    color-mix(in srgb, #fff9f3 0%, transparent) 25%,
+    color-mix(in srgb, #fff9f3 50%, transparent) 48%,
+    color-mix(in srgb, #fff9f3 0%, transparent) 62%,
+    transparent 100%
+  );
+  animation: bento-sheen 11s var(--ease-luxury) infinite;
+  mix-blend-mode: soft-light;
+}
+
+/* Hero scroll line — a hint of life */
+@keyframes scroll-hint {
+  0%,
+  100% {
+    transform: scaleY(0.45);
+    opacity: 0.2;
+  }
+  45%,
+  55% {
+    transform: scaleY(1);
+    opacity: 0.5;
+  }
+}
+.scroll-hint-line {
+  transform-origin: top;
+  animation: scroll-hint 2.4s var(--ease-luxury) infinite;
+}
+
+/* Subtle page shell after client navigations (see app/[locale]/template.tsx) */
+@keyframes lux-page-in {
+  from {
+    opacity: 0.88;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.lux-page-shell {
+  animation: lux-page-in 0.65s var(--ease-luxury) both;
+}
+
+/* Product card lift — class used from ProductCard */
+.lux-card-lift {
+  transition: box-shadow 0.6s var(--ease-luxury), transform 0.65s var(--ease-luxury);
+}
+.lux-card-lift:hover {
+  box-shadow: 0 28px 60px -12px color-mix(in srgb, #a5bf97 24%, transparent);
 }

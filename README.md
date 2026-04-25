@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Auréalis
 
-## Getting Started
+E-commerce storefront for a cosmetics brand: **Next.js 16 (App Router)**, **React 19**, **Tailwind v4**, **i18n** (`en` / `ar` via [next-intl](https://next-intl.dev)), cart with **Zustand**, and optional **Paymob Accept** card payments (server-only integration). A separate **admin** mini-app lives under `admin/` and runs on **port 3001** in development.
 
-First, run the development server:
+**Docs:** [ARCHITECTURE.md](./ARCHITECTURE.md) (system design), [SECURITY.md](./SECURITY.md) (threats, rate limits, CSP, edge/WAF). **Update those and this README** when you add routes, APIs, or deployment steps.
+
+**Last updated:** 2026-04-24
+
+---
+
+## Quick start (storefront)
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). Locale-prefixed routes: `/en/...`, `/ar/...` (see `i18n/routing.ts`).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Admin app (separate process)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+cd admin && npm install   # first time only
+npm run dev
+```
 
-## Learn More
+Listens on [http://localhost:3001](http://localhost:3001). Configure `admin/.env.local` (see `.env.example` in the repo root for variable names). From repo root you can also run `npm run dev:admin` after `admin` dependencies are installed.
 
-To learn more about Next.js, take a look at the following resources:
+## Scripts (repo root)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Script | Purpose |
+|--------|---------|
+| `npm run dev` | Storefront dev server (port 3000) |
+| `npm run build` | Production build — storefront |
+| `npm start` | Start production server — storefront |
+| `npm run dev:admin` | Admin dev server (port 3001) |
+| `npm run build:admin` | Production build — admin |
+| `npm run start:admin` | Start production — admin |
+| `npm run lint` | ESLint — storefront |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Environment
 
-## Deploy on Vercel
+Copy `.env.example` to `.env.local` and fill in values. For Paymob, set at least: `PAYMOB_API_KEY`, `PAYMOB_MERCHANT_ID`, `PAYMOB_INTEGRATION_ID`, `PAYMOB_HMAC_SECRET`, and `NEXT_PUBLIC_SITE_URL` (public URL used in return links). For admin, use a **separate** `admin/.env.local` and never commit real secrets.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Project structure (short)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+app/                 # App Router: root + [locale]/* routes
+  api/paymob/        # paymob/ready, init, return
+components/          # Shared UI
+i18n/                # next-intl routing + request config
+lib/                 # data, store, supabase, paymob, cart validation
+messages/            # en.json, ar.json
+middleware.ts        # next-intl locale handling
+admin/               # second Next app: login + protected dashboard
+```
+
+For diagrams and deeper detail, read [ARCHITECTURE.md](./ARCHITECTURE.md).
+
+## Deploy
+
+Storefront: any Node host or [Vercel](https://vercel.com) (set env vars in the project dashboard). **Admin** should be deployed only on a private network or with strict access controls (separate project, IP restrictions, or VPN), not on the same public entrypoint as the shop unless you add another layer of protection.
+
+## Learn more
+
+- [Next.js documentation](https://nextjs.org/docs)
+- [next-intl](https://next-intl.dev)
+- [Paymob developers](https://developers.paymob.com)

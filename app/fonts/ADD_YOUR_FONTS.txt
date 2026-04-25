@@ -1,0 +1,29 @@
+What is already done for you
+----------------------------
+- Display + italics: Cormorant Garamond (self-hosted from the @fontsource package in node_modules).
+- UI / nav: Syne (same).
+- Wired in app/[locale]/layout.tsx via next/font/local — production visitors get fonts from your site, not from Google’s servers.
+
+What only you can do (licensed files)
+------------------------------------
+- Purchase / obtain webfont files for typefaces not on npm (e.g. TAN Twinkle, Pushkin High) that your license allows for your website.
+- Export or request .woff2 (best) or .woff from the foundry.
+
+How to switch the site to your custom display font
+---------------------------------------------------
+1. Create a folder: app/fonts/custom/
+2. Copy your files there, e.g. TAN-Twinkle-Regular.woff2, TAN-Twinkle-Italic.woff2
+3. Edit app/fonts/self-hosted.ts:
+   - Either replace the `fontCormorant` `src` array with paths like:
+       './custom/TAN-Twinkle-Regular.woff2'
+     (paths are relative to app/fonts/self-hosted.ts)
+   - Or add a new localFont export, e.g. fontTanTwinkle, and in layout put its .variable next to the others; then in app/globals.css set --font-display to use var(--font-tan-twinkle), etc.
+4. Run npm run build and check the browser Network tab for .woff2 requests from your own domain.
+
+Body text (Optima)
+------------------
+- Optima is a system font on some Macs; there is no free web license. The layout keeps Optima in the stack first, then Candara/Georgia for everyone else. To self-host Optima you must own a proper web license and add it the same way as step 2–3 above.
+
+Arabic
+------
+- Cormorant in this build uses Latin (and you can add latin-ext files later). For Arabic UI, add a self-hosted font with Arabic support (e.g. a licensed Arabic webfont) and add it to the body stack in app/[locale]/layout.tsx for locale === "ar" if you want a dedicated match.
