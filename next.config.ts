@@ -20,9 +20,10 @@ function buildCsp() {
     ? "script-src 'self' 'unsafe-inline' 'unsafe-eval'"
     : "script-src 'self' 'unsafe-inline'";
   const supabaseConnect = "https://*.supabase.co wss://*.supabase.co";
+  const sarieeConnect = "https://api.sariee.com";
   const connect = isDev
-    ? `connect-src 'self' https: wss: ws: http: https://vercel.live https://*.vercel.app ${supabaseConnect}`
-    : `connect-src 'self' https://vercel.live https://*.vercel.app ${supabaseConnect}`;
+    ? `connect-src 'self' https: wss: ws: http: https://vercel.live https://*.vercel.app ${supabaseConnect} ${sarieeConnect}`
+    : `connect-src 'self' https://vercel.live https://*.vercel.app ${supabaseConnect} ${sarieeConnect}`;
   return [
     "default-src 'self'",
     script,
