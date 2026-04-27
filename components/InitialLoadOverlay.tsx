@@ -5,32 +5,39 @@ import { SparkleLoadVisual } from '@/components/SparkleLoadVisual';
 
 const MIN_MS = 650;
 const FADE_MS = 500;
+const ABSOLUTE_MAX_MS = 2000;
 
-/**
- * Full-screen first paint: slow rotate + twinkle on your sparkle asset.
- * Hides on window `load` (and never blocks client navigations after that).
- */
 export function InitialLoadOverlay() {
   const [phase, setPhase] = useState<'in' | 'out' | 'gone'>('in');
 
   useEffect(() => {
-    const t0 = performance.now();
+    let cancelled = false;
+    let finished = false;
 
-    const finish = () => {
-      const elapsed = performance.now() - t0;
-      const wait = Math.max(0, MIN_MS - elapsed);
+    const go = () => {
+      if (cancelled || finished) return;
+      finished = true;
+      setPhase('out');
       window.setTimeout(() => {
-        setPhase('out');
-        window.setTimeout(() => setPhase('gone'), FADE_MS);
-      }, wait);
+        if (!cancelled) setPhase('gone');
+      }, FADE_MS);
     };
 
-    if (document.readyState === 'complete') {
-      finish();
-      return;
+    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      go();
+      return () => {
+        cancelled = true;
+      };
     }
-    window.addEventListener('load', finish, { once: true });
-    return () => window.removeEventListener('load', finish);
+
+    const tNormal = window.setTimeout(go, MIN_MS);
+    const tMax = window.setTimeout(go, ABSOLUTE_MAX_MS);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(tNormal);
+      window.clearTimeout(tMax);
+    };
   }, []);
 
   if (phase === 'gone') return null;

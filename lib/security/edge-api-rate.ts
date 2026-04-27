@@ -4,10 +4,6 @@ type Bucket = { count: number; windowStart: number };
 const store = new Map<string, Bucket>();
 const MAX_KEYS = 12_000;
 
-/**
- * In-memory, per-IP cap for all `/api/*` (single Node/Edge instance).
- * Complement: Paymob `init` has stricter limits; WAF/Cloudflare in production.
- */
 function getConfig() {
   const windowMs = 60_000;
   const max = Math.max(10, Math.min(500, Number(process.env.API_RATE_MAX_PER_MIN ?? 120) || 120));

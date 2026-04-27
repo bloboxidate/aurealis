@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useTranslations, useLocale } from 'next-intl';
 import BrandWordmark from '@/components/BrandWordmark';
+import { NavMenuDropdown } from '@/components/NavMenuDropdown';
+import { UserAuthNav, UserAuthNavMobile } from '@/components/UserAuthNav';
 import { useCartStore } from '@/lib/store';
 
 export default function Navbar() {
@@ -39,35 +41,11 @@ export default function Navbar() {
       }`}
     >
       <div className="max-w-[1600px] mx-auto pl-[max(0.5rem,env(safe-area-inset-left,0px))] pr-[max(0.5rem,env(safe-area-inset-right,0px))] sm:pl-[max(1.5rem,env(safe-area-inset-left,0px))] sm:pr-[max(1.5rem,env(safe-area-inset-right,0px))] lg:pl-[max(2.5rem,env(safe-area-inset-left,0px))] lg:pr-[max(2.5rem,env(safe-area-inset-right,0px))]">
-        <div className="relative flex items-center h-24 sm:h-28">
-          {/* Left — equal width for optical centering of wordmark */}
-          <div className="flex-1 flex items-center justify-start min-w-0 pr-2">
-            <nav className="hidden md:flex items-center gap-6 lg:gap-8 flex-wrap">
-              {(['shop', 'about', 'contact'] as const).map((key) => (
-                <Link
-                  key={key}
-                  href={`/${locale}/${key}`}
-                  className="text-[10px] lg:text-[11px] tracking-[0.28em] uppercase font-semibold text-ink/45 nav-link-lux"
-                  style={{ fontFamily: 'var(--font-ui)' }}
-                >
-                  {t(key)}
-                </Link>
-              ))}
-              <Link
-                href={`/${locale}/search`}
-                className="text-[10px] lg:text-[11px] tracking-[0.28em] uppercase font-semibold text-ink/45 nav-link-lux"
-                style={{ fontFamily: 'var(--font-ui)' }}
-              >
-                {t('search')}
-              </Link>
-              <Link
-                href={`/${locale}/account`}
-                className="text-[10px] lg:text-[11px] tracking-[0.28em] uppercase font-semibold text-ink/45 nav-link-lux"
-                style={{ fontFamily: 'var(--font-ui)' }}
-              >
-                {t('account')}
-              </Link>
-            </nav>
+        <div className="relative flex w-full min-h-24 items-center justify-between gap-2 sm:min-h-[6.5rem] md:min-h-[7rem]">
+          <div className="relative z-20 flex shrink-0 items-center">
+            <div className="hidden md:block">
+              <NavMenuDropdown />
+            </div>
             <button
               type="button"
               className="md:hidden text-ink/50 hover:text-apricot min-w-[44px] min-h-[44px] flex items-center justify-center touch-manipulation rounded-lg -ms-1"
@@ -88,23 +66,30 @@ export default function Navbar() {
             </button>
           </div>
 
-          <Link
-            href={`/${locale}`}
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 group"
-          >
-            <BrandWordmark
-              width={480}
-              height={154}
-              boxClassName="h-20 w-auto sm:h-24 md:h-28 max-w-[min(500px,78vw)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.02]"
-              sizes="(max-width: 768px) 78vw, 500px"
-              priority
-            />
-          </Link>
+          <div className="pointer-events-none absolute inset-0 z-10">
+            <Link
+              href={`/${locale}`}
+              className="group pointer-events-auto absolute left-1/2 top-1/2 z-30 block h-16 w-64 max-w-[min(18.5rem,calc(100%-3.5rem))] -translate-x-1/2 -translate-y-1/2 sm:h-20 sm:max-w-[min(22rem,calc(100%-8rem))] sm:w-72 md:h-20 md:max-w-[min(20rem,calc(100%-10rem))] md:w-64 lg:h-20 lg:max-w-[min(20rem,calc(100%-12rem))] lg:w-64 xl:h-[5.5rem] xl:max-w-[20rem] xl:w-[20rem] outline-none ring-0 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] md:group-hover:scale-[1.02]"
+            >
+              <BrandWordmark
+                src="/logo-black.png"
+                blend="none"
+                width={480}
+                height={154}
+                contained
+                boxClassName="transition-transform duration-500"
+                className="opacity-[0.88] [filter:sepia(0.12)_saturate(0.9)_contrast(1.05)]"
+                sizes="(max-width: 640px) 320px, (max-width: 768px) 360px, 360px, 500px"
+                priority
+              />
+            </Link>
+          </div>
 
-          <div className="flex-1 flex items-center justify-end gap-4 sm:gap-6 pl-2">
+          <div className="relative z-20 flex shrink-0 items-center gap-1.5 sm:gap-2 md:gap-4">
+            <UserAuthNav />
             <Link
               href={`/${otherLocale}`}
-              className="shrink-0 min-h-11 min-w-11 sm:min-h-12 sm:min-w-12 inline-flex items-center justify-center rounded-full border border-ink/12 bg-petal/50 px-3 sm:px-4 text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase font-bold text-ink/60 hover:text-apricot hover:border-apricot/40 transition-colors"
+              className="shrink-0 min-h-10 min-w-10 sm:min-h-12 sm:min-w-12 inline-flex items-center justify-center rounded-full border border-ink/12 bg-petal/50 px-2 sm:px-4 text-[10px] sm:text-sm tracking-[0.12em] sm:tracking-[0.2em] uppercase font-bold text-ink/60 hover:text-apricot hover:border-apricot/40 transition-colors"
               style={{ fontFamily: 'var(--font-ui)' }}
             >
               {otherLocale === 'ar' ? 'عربي' : 'EN'}
@@ -122,7 +107,7 @@ export default function Navbar() {
             <Link
               href={`/${locale}/cart`}
               aria-label="Cart"
-              className="relative text-ink/45 hover:text-apricot transition-colors min-w-[44px] min-h-[44px] inline-flex items-center justify-center -me-0.5 touch-manipulation"
+              className="relative text-ink/45 hover:text-apricot transition-colors min-w-[40px] min-h-[40px] sm:min-w-[44px] sm:min-h-[44px] inline-flex items-center justify-center -me-0.5 sm:-me-0 touch-manipulation"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
                 <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
@@ -140,18 +125,35 @@ export default function Navbar() {
       </div>
 
       {menuOpen && (
-        <div className="md:hidden border-t border-border/60 bg-petal/98 backdrop-blur-lg px-6 pt-4 pb-[max(2rem,env(safe-area-inset-bottom,0px))] space-y-1 max-h-[min(80dvh,520px)] overflow-y-auto overscroll-contain touch-pan-y">
-          {(['shop', 'about', 'contact', 'search', 'account', 'faq'] as const).map((key) => (
-            <Link
-              key={key}
-              href={`/${locale}/${key}`}
-              onClick={() => setMenuOpen(false)}
-              className="block py-3.5 -mx-1 px-1 text-sm tracking-[0.25em] uppercase font-semibold text-ink/60 active:text-apricot"
-              style={{ fontFamily: 'var(--font-ui)' }}
-            >
-              {t(key)}
-            </Link>
-          ))}
+        <div className="md:hidden border-t border-border/60 bg-petal/98 backdrop-blur-lg px-6 pt-4 pb-[max(2rem,env(safe-area-inset-bottom,0px))] max-h-[min(80dvh,520px)] overflow-y-auto overscroll-contain touch-pan-y">
+          <UserAuthNavMobile onNavigate={() => setMenuOpen(false)} />
+          <nav className="space-y-1 pt-2">
+            {(
+              [
+                'shop',
+                'about',
+                'contact',
+                'search',
+                'account',
+                'wishlist',
+                'track_order',
+                'faq',
+              ] as const
+            ).map((key) => {
+              const path = key === 'track_order' ? 'track-order' : key;
+              return (
+                <Link
+                  key={key}
+                  href={`/${locale}/${path}`}
+                  onClick={() => setMenuOpen(false)}
+                  className="block py-3.5 -mx-1 px-1 text-sm tracking-[0.25em] uppercase font-semibold text-ink/60 active:text-apricot"
+                  style={{ fontFamily: 'var(--font-ui)' }}
+                >
+                  {t(key)}
+                </Link>
+              );
+            })}
+          </nav>
         </div>
       )}
     </header>

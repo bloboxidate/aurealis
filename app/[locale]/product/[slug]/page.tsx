@@ -8,17 +8,21 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { products } from '@/lib/data';
 import { useCartStore } from '@/lib/store';
+import { useWishlistStore } from '@/lib/wishlist-store';
 import { useState } from 'react';
 
 export default function ProductPage() {
   const params = useParams();
   const t = useTranslations('product');
   const locale = useLocale();
+  const product = products.find((p) => p.slug === params.slug);
+  const productId = product?.id ?? '';
   const addItem = useCartStore((s) => s.addItem);
+  const toggleWishlist = useWishlistStore((s) => s.toggle);
+  const inWishlist = useWishlistStore((s) => s.has(productId));
   const [added, setAdded] = useState(false);
   const [activeTab, setActiveTab] = useState<'description' | 'ingredients' | 'how_to_use'>('description');
 
-  const product = products.find((p) => p.slug === params.slug);
   if (!product) notFound();
 
   const name = locale === 'ar' ? product.name_ar : product.name_en;
@@ -30,6 +34,8 @@ export default function ProductPage() {
     setAdded(true);
     setTimeout(() => setAdded(false), 1500);
   };
+
+  const handleWishlist = () => toggleWishlist(product.id);
 
   return (
     <>
@@ -106,15 +112,33 @@ export default function ProductPage() {
                 </span>
               </div>
 
-              <button
-                type="button"
-                onClick={handleAdd}
-                disabled={!product.in_stock}
-                className="w-full max-w-md py-5 rounded-full bg-apricot text-petal text-xs tracking-[0.35em] uppercase font-bold hover:bg-apricot-deep transition-colors disabled:opacity-40 disabled:cursor-not-allowed shadow-lg"
-                style={{ fontFamily: 'var(--font-ui)' }}
-              >
-                {added ? t('added') : t('add_to_cart')}
-              </button>
+              <div className="flex flex-col sm:flex-row gap-3 max-w-md w-full">
+                <button
+                  type="button"
+                  onClick={handleAdd}
+                  disabled={!product.in_stock}
+                  className="flex-1 py-5 rounded-full bg-apricot text-petal text-xs tracking-[0.35em] uppercase font-bold hover:bg-apricot-deep transition-colors disabled:opacity-40 disabled:cursor-not-allowed shadow-lg"
+                  style={{ fontFamily: 'var(--font-ui)' }}
+                >
+                  {added ? t('added') : t('add_to_cart')}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleWishlist}
+                  className="sm:w-16 py-5 rounded-full border-2 border-ink/12 flex items-center justify-center text-ink/45 hover:text-apricot hover:border-apricot/30 transition-colors min-h-[48px] min-w-[48px] shrink-0"
+                  aria-pressed={inWishlist}
+                  aria-label={inWishlist ? t('wishlist_remove') : t('wishlist_add')}
+                >
+                  <svg viewBox="0 0 24 24" width="22" height="22" className={inWishlist ? 'text-apricot' : 'text-current'} aria-hidden>
+                    <path
+                      d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                      fill={inWishlist ? 'currentColor' : 'none'}
+                      stroke="currentColor"
+                      strokeWidth="1.2"
+                    />
+                  </svg>
+                </button>
+              </div>
 
               <div className="space-y-4 max-w-2xl">
                 <div className="flex flex-wrap gap-1 border-b border-border">

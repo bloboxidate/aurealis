@@ -1,17 +1,11 @@
 import Image from 'next/image';
 
 type Props = {
-  /** Base width/height in px (square asset) */
   size?: number;
   className?: string;
-  /** If true, Image uses priority (first paint) */
   priority?: boolean;
 };
 
-/**
- * The mood-board 4-point star from `/public/sparkle-loader.png` with
- * rotate + glow breathe (see globals.css `.sparkle-loader-*`).
- */
 export function SparkleLoadVisual({ size = 120, className = '', priority = false }: Props) {
   return (
     <div

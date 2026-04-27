@@ -73,9 +73,6 @@ function billingData(b: BillingForPaymob) {
   };
 }
 
-/**
- * Register order + get payment key for Accept iframe. Totals are already server-validated (piasters).
- */
 export async function createCardPaymentSession(params: {
   authToken: string;
   amountCents: number;

@@ -4,7 +4,7 @@
 
 **UX / motion** — `app/globals.css` defines `--ease-luxury` and long hover durations. `components/LuxuryReveal.tsx` provides scroll-in reveals (intersection, once) with optional stagger. Home uses `mesh-hero--ambient`, bento `bento-sheen-layer`, and `app/[locale]/template.tsx` applies a very soft page shell on navigations. `prefers-reduced-motion: reduce` narrows or disables most motion.
 
-**Branding (logo & locale)** — The orange wordmark is `components/BrandWordmark.tsx` (PNG at `public/logo-orange.png`, multiply blend on `petal`); the home hero uses a **large** centered wordmark; the same component is used in the **navbar** (center, scaled by responsive height). The footer uses the black lockup at `public/logo-black.png` (larger than icon-only, readable on all breakpoints). The **language switch** (EN / عربي) is a `Link` in `components/Navbar.tsx` to the sibling locale; it is styled as a pill control for visibility, not body-microcopy. Change sizes in those three places if you re-tune layout.
+**Branding (logo & locale)** — `components/BrandWordmark.tsx` accepts `src` and `blend`. The **home hero** and **navbar** use transparent **`logo-black.png`** with **`blend="none"`** and (on the hero) a warm **CSS `filter`** so the wordmark matches apricot/brand without a multiply white “panel” on the mesh. The **footer** also uses the black lockup. The **language switch** (EN / عربي) in `components/Navbar.tsx` links to the sibling locale. Adjust `BrandWordmark` `width` / `height` and `boxClassName` in the hero, navbar, and (if re-used) any other call site when re-tuning layout.
 
 **Security** — See [SECURITY.md](./SECURITY.md). Summary: `proxy.ts` (Next.js 16 “proxy” convention) rate-limits `/api/*`, Paymob `init` uses Zod + body size limits + sanitization, `next.config` sets CSP/COOP/CORP/HSTS (when enabled), no raw SQL, Supabase is lazy-initialized. DDoS and global abuse require WAF/edge; in-memory rate limits are per process.
 
@@ -36,7 +36,7 @@ flowchart TB
   Paymob --> Browser
 ```
 
-- **Storefront** — public e-commerce UI, internationalized routes, cart (Zustand + `localStorage`), optional **Paymob** card checkout via server-only API routes.
+- **Storefront** — public e-commerce UI, internationalized routes, **cart** and **wishlist** (Zustand + `localStorage`), **orders** and **track-order** client persistence (no server account), optional **Paymob** card checkout via server-only API routes, plus **sitemap/robots** and locale **not-found** / **error** boundaries.
 - **Admin** — separate Next.js app under `admin/` (own `package.json`, **port 3001** in dev). Not the public site; intended for VPN / IP allowlist in production.
 
 ---
@@ -45,14 +45,19 @@ flowchart TB
 
 | Area | Role |
 |------|------|
-| `app/[locale]/` | Localized pages: home, shop, product, cart, checkout, content (about, contact, FAQ, legal, shipping), search, account placeholder. |
+| `app/[locale]/` | All localized **shop and content** routes; includes `not-found.tsx` and `error.tsx` for the locale segment. |
+| `app/sitemap.ts` | Sitemap: static path segments × `en` / `ar`, plus `/product/[slug]` for each `lib/data` product. |
+| `app/robots.ts` | `robots.txt` with `allow: /` and sitemap URL; base from `NEXT_PUBLIC_SITE_URL` or a localhost default. |
 | `app/page.tsx` | Root entry; delegates to locale routing as configured. |
 | `proxy.ts` | `next-intl` locale + global `/api/*` rate limit; `matcher` excludes static assets. |
 | `i18n/` | `routing.ts`, `request.ts` — locales `en` / `ar`, message loading. |
 | `messages/` | `en.json`, `ar.json` — all user-facing copy. |
-| `components/` | Shared UI: `Navbar`, `Footer`, `ProductCard`, `ContentPageLayout`, etc. |
+| `components/` | Shared UI: `Navbar`, `Footer`, `ProductCard`, `ContentPageLayout`, `NewsletterForm`, etc. |
 | `lib/data.ts` | Product catalog (in-repo); **source of truth for prices** server-side. |
-| `lib/store.ts` | Zustand cart; persisted as `aurealis-cart`. |
+| `lib/store.ts` | Zustand **cart**; persisted as `aurealis-cart`. |
+| `lib/wishlist-store.ts` | Zustand **wishlist**; persisted as `aurealis-wishlist`. |
+| `lib/orders-persist.ts` | Client-only: `localStorage` order list (`aurealis-orders`); idempotent append by `ref`; helpers for list and track-order. |
+| `lib/checkout-pending.ts` + `lib/checkout-pending.types.ts` | `sessionStorage` copy of a pending order so `checkout/success` can build a `StoredOrder` when the user returns. |
 | `lib/supabase.ts` | Supabase client (for future data/auth). |
 | `lib/validate-cart.ts` | Server-side recalculation of line totals (piasters) from `productId` + `quantity` only. |
 | `lib/paymob/*` | **Server-only** (via `server-only`): config, Accept API sequence, HMAC redirect verification, request origin helper, in-memory rate limit. |
@@ -60,7 +65,11 @@ flowchart TB
 | `app/api/paymob/init` | `POST` — validates origin (unless relaxed), rate limits, validates cart, creates Paymob session, returns `iframeUrl`. |
 | `app/api/paymob/return` | `GET` — post-payment browser redirect; verifies HMAC, redirects to `/{locale}/checkout/success` or back to checkout with error. |
 
+**`app/[locale]/` route map (examples under `/{locale}/…`):** home `""`, `shop`, `product/[slug]`, `search`, `cart`, `checkout`, `checkout/success`; `account` (hub), `account/orders`, `account/orders/[ref]`, `account/settings`; `wishlist`, `track-order`; `about`, `contact`, `faq`, `shipping`, `returns`; `privacy`, `terms`, `cookies`, `accessibility`, `directory`.
+
 **Payment rule:** never trust client-reported prices. The init route recomputes amounts from `lib/data`.
+
+**Client order history (not a server of record):** completed checkouts (demo or after Paymob return) are saved only in the browser; clearing storage, another device, or future server-backed auth will not show the same data until you sync to a database.
 
 ---
 
@@ -99,6 +108,8 @@ flowchart TB
 4. Browser goes to Paymob hosted iframe; user pays.
 5. Paymob redirects to `GET /api/paymob/return?...&hmac=...`.
 6. Server verifies HMAC, then redirects to localized success or checkout with an error code.
+
+Before redirecting to Paymob (or submitting a **demo** order), the client stores a **pending checkout** in `sessionStorage` (`lib/checkout-pending.ts`). The **success** page reads that payload (once), appends a **`StoredOrder`** to `localStorage` (`lib/orders-persist.ts`) when a matching `ref` is present, and links to `account/orders/[ref]`. This is for UX only until orders are ingested on the server.
 
 **Fulfillment at scale:** consider a **server-to-server** Paymob “transaction processed” webhook to record paid orders; redirect HMAC alone may not be enough for dispute handling.
 

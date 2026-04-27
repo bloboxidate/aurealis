@@ -1,10 +1,5 @@
 @import 'tailwindcss';
 
-/*
-  Auréalis — mood board palette:
-  #fff9f3 #f7d595 #a5bf97 #bfb5e8 #f8ae7f
-  Type: Cormorant (TAN Twinkle / The Seasons / Pushkin), Optima body, Syne UI
-*/
 @theme {
   --color-petal:   #fff9f3;
   --color-honey:   #f7d595;
@@ -48,16 +43,13 @@ body {
   overflow-x: clip;
   max-width: 100%;
   -webkit-tap-highlight-color: color-mix(in srgb, var(--color-apricot) 12%, transparent);
-  /* Body default: Optima stack in layout; display/UI use next/font/local (see app/fonts/self-hosted.ts) */
 }
 
-/* Long words (URLs, product names) + RTL: avoid horizontal scroll on narrow viewports */
 [lang] {
   overflow-wrap: anywhere;
   word-break: break-word;
 }
 
-/* iOS Safari: focused inputs with font-size < 16px trigger page zoom; override utility classes on narrow viewports. */
 @media (max-width: 40rem) {
   input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
   textarea,
@@ -73,19 +65,16 @@ body {
 }
 
 :root {
-  /* Mood board: TAN Twinkle, The Seasons, Pushkin — web stack anchors on Cormorant */
   --font-display: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
   --font-body:    Optima, Candara, Georgia, "Times New Roman", serif;
   --font-ui:      var(--font-syne), "Trebuchet MS", system-ui, sans-serif;
   --text-hero:    clamp(2.75rem, 7.5vw, 5.5rem);
   --text-hero-tight: 0.95;
-  /* Prestige motion: long, decelerate-heavy curves */
   --ease-luxury: cubic-bezier(0.22, 1, 0.36, 1);
   --duration-lux-hover: 0.55s;
   --duration-lux-reveal: 1s;
 }
 
-/* Subtle paper grain (palette-only noise via opacity) */
 .grain {
   position: relative;
 }
@@ -107,7 +96,6 @@ body {
     var(--color-petal);
 }
 
-/* Very slow “living” light in hero — like sun moving across silk */
 @keyframes mesh-ambient {
   0%,
   100% {
@@ -179,7 +167,6 @@ body {
 }
 .btn-hero-cta:hover { transform: translateY(-2px); animation: cta-pulse 2s ease-in-out infinite; }
 
-/* Refined underlines: background-size (RTL-friendly) */
 .nav-link-lux {
   position: relative;
   padding-bottom: 2px;
@@ -200,6 +187,26 @@ body {
   color: var(--color-apricot);
 }
 
+@keyframes nav-menu-item-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.4rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.nav-menu-drop-item {
+  animation: nav-menu-item-in 0.45s var(--ease-luxury) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-menu-drop-item {
+    animation: none;
+    opacity: 1;
+  }
+}
+
 @keyframes fade-up {
   from { opacity: 0; transform: translateY(24px); }
   to { opacity: 1; transform: translateY(0); }
@@ -214,7 +221,6 @@ body {
 .ticker-skew { transform: skewY(-1.2deg); }
 .ticker-unskew { transform: skewY(1.2deg); }
 
-/* —— Branded sparkle loader (public/sparkle-loader.png) —— */
 @keyframes sparkle-loader-rotate {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
@@ -272,7 +278,6 @@ body {
   mix-blend-mode: multiply;
 }
 
-/* Soft brand sheen for large panels (bento) — not a neon sweep */
 @keyframes bento-sheen {
   0%,
   100% {
@@ -313,7 +318,6 @@ body {
   mix-blend-mode: soft-light;
 }
 
-/* Hero scroll line — a hint of life */
 @keyframes scroll-hint {
   0%,
   100% {
@@ -331,7 +335,6 @@ body {
   animation: scroll-hint 2.4s var(--ease-luxury) infinite;
 }
 
-/* Subtle page shell after client navigations (see app/[locale]/template.tsx) */
 @keyframes lux-page-in {
   from {
     opacity: 0.88;
@@ -344,7 +347,6 @@ body {
   animation: lux-page-in 0.65s var(--ease-luxury) both;
 }
 
-/* Product card lift — class used from ProductCard */
 .lux-card-lift {
   transition: box-shadow 0.6s var(--ease-luxury), transform 0.65s var(--ease-luxury);
 }

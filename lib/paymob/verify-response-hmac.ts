@@ -1,10 +1,5 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
 
-/**
- * Paymob "transaction response" redirect: HMAC-SHA512 over a fixed string order.
- * If verification fails in production, adjust key order/aliases per your dashboard
- * and Paymob’s current spec: https://developers.paymob.com/paymob-docs/developers/webhook-callbacks-and-hmac
- */
 const HMAC_KEY_ORDER: string[] = [
   'amount_cents',
   'created_at',
@@ -39,9 +34,6 @@ function getVal(params: URLSearchParams, key: string): string {
   return '';
 }
 
-/**
- * @returns whether the HMAC is valid. If `hmac` or secret is missing, returns `false` (do not treat as paid).
- */
 export function verifyTransactionResponseHmac(
   fullUrl: string,
   hmacSecret: string
@@ -71,7 +63,6 @@ export function verifyTransactionResponseHmac(
   }
 }
 
-/** Success flag in redirect: Paymob may send string "true" or "false". */
 export function isPaymobSuccessParam(params: URLSearchParams): boolean {
   const s = (params.get('success') ?? '').toLowerCase();
   return s === 'true' || s === '1' || s === 'yes';

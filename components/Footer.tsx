@@ -49,6 +49,7 @@ export default function Footer() {
                   ['about', `/${locale}/about`],
                   ['contact', `/${locale}/contact`],
                   ['account', `/${locale}/account`],
+                  ['wishlist', `/${locale}/wishlist`],
                 ] as const
               ).map(([key, href]) => (
                 <li key={key}>
@@ -76,6 +77,9 @@ export default function Footer() {
                 [
                   ['faq', `/${locale}/faq`],
                   ['shipping', `/${locale}/shipping`],
+                  ['returns', `/${locale}/returns`],
+                  ['track', `/${locale}/track-order`],
+                  ['directory', `/${locale}/directory`],
                 ] as const
               ).map(([key, href]) => (
                 <li key={key}>
@@ -96,7 +100,7 @@ export default function Footer() {
               className="text-[10px] tracking-[0.45em] uppercase font-bold text-apricot mb-4"
               style={{ fontFamily: 'var(--font-ui)' }}
             >
-              Legal
+              {t('legal_title')}
             </p>
             <ul className="space-y-3">
               <li>
@@ -115,6 +119,24 @@ export default function Footer() {
                   style={{ fontFamily: 'var(--font-ui)' }}
                 >
                   {t('terms')}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`/${locale}/cookies`}
+                  className="text-ink/60 text-sm hover:text-apricot transition-colors"
+                  style={{ fontFamily: 'var(--font-ui)' }}
+                >
+                  {t('cookies')}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`/${locale}/accessibility`}
+                  className="text-ink/60 text-sm hover:text-apricot transition-colors"
+                  style={{ fontFamily: 'var(--font-ui)' }}
+                >
+                  {t('a11y')}
                 </Link>
               </li>
             </ul>

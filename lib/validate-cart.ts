@@ -9,7 +9,6 @@ export type ValidateCartResult =
   | { ok: true; lines: ValidatedLine[]; amountCents: number; merchantRef: string }
   | { ok: false; error: string };
 
-/** Server-side recalculation: never trust client prices. Amount in piasters (1 EGP = 100). */
 export function validateCartLines(
   items: CartLineInput[],
   merchantRef: string

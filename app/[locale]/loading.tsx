@@ -1,6 +1,5 @@
 import { SparkleLoadVisual } from '@/components/SparkleLoadVisual';
 
-/** Shown during React Server/segment loading (route transitions, refresh). */
 export default function LocaleLoading() {
   return (
     <div

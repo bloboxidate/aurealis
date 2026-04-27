@@ -4,17 +4,25 @@ const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 
 const isDev = process.env.NODE_ENV === 'development';
 
-/**
- * Next.js + hydration often needs 'unsafe-inline' for scripts. Tighten when framework allows nonces.
- * frame-src: Paymob hosted checkout iframe. connect-src: same-origin; add analytics hosts when you add them.
- */
+const allowedDevOrigins = isDev
+  ? [
+      ...new Set(
+        `192.168.1.30,${process.env.ALLOWED_DEV_ORIGINS ?? ''}`
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean)
+      ),
+    ]
+  : undefined;
+
 function buildCsp() {
   const script = isDev
     ? "script-src 'self' 'unsafe-inline' 'unsafe-eval'"
     : "script-src 'self' 'unsafe-inline'";
+  const supabaseConnect = "https://*.supabase.co wss://*.supabase.co";
   const connect = isDev
-    ? "connect-src 'self' https: wss: ws: http: https://vercel.live https://*.vercel.app"
-    : "connect-src 'self' https://vercel.live https://*.vercel.app";
+    ? `connect-src 'self' https: wss: ws: http: https://vercel.live https://*.vercel.app ${supabaseConnect}`
+    : `connect-src 'self' https://vercel.live https://*.vercel.app ${supabaseConnect}`;
   return [
     "default-src 'self'",
     script,
@@ -53,6 +61,9 @@ if (process.env.VERCEL === '1' || process.env.ENABLE_HSTS === '1') {
 }
 
 export default withNextIntl({
+  ...(allowedDevOrigins && allowedDevOrigins.length > 0
+    ? { allowedDevOrigins }
+    : {}),
   async headers() {
     return [
       {

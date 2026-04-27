@@ -40,7 +40,6 @@ export default async function HomePage() {
     <>
       <Navbar />
 
-      {/* HERO — split editorial + floating wordmark (mesh = palette only) */}
       <section
         className={`relative min-h-[100dvh] mesh-hero mesh-hero--ambient grain flex flex-col lg:flex-row overflow-hidden ${isRtl ? 'lg:flex-row-reverse' : ''}`}
       >
@@ -86,20 +85,23 @@ export default async function HomePage() {
           </div>
         </div>
 
-        <div className="lg:w-1/2 flex items-center justify-center relative px-6 pb-20 lg:pb-0 min-h-[45vh] lg:min-h-0">
+        <div className="lg:w-1/2 flex items-center justify-center relative px-4 sm:px-8 pb-20 pt-4 lg:pb-0 lg:pt-0 min-h-[52vh] sm:min-h-[48vh] lg:min-h-0 w-full max-w-2xl mx-auto lg:max-w-none">
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
             <div
-              className="absolute w-[min(100%,500px)] aspect-square -right-1/4 top-1/2 -translate-y-1/2 rounded-full opacity-25 blur-[100px]"
+              className="absolute w-[min(100%,520px)] aspect-square -right-1/4 top-1/2 -translate-y-1/2 rounded-full opacity-25 blur-[100px]"
               style={{ background: 'radial-gradient(circle, #f7d595, #bfb5e8)' }}
             />
           </div>
-          <div className="relative flex flex-col items-center gap-6 animate-float-logo">
+          <div className="relative flex w-full max-w-2xl flex-col items-center justify-center gap-7 sm:gap-8 animate-float-logo">
             <BrandWordmark
-              width={420}
-              height={126}
-              boxClassName="w-[min(400px,88vw)] drop-shadow-2xl"
+              width={560}
+              height={168}
+              src="/logo-black.png"
+              blend="none"
+              boxClassName="w-full max-w-[min(560px,92vw)] sm:max-w-[min(600px,88vw)]"
+              className="[filter:sepia(0.45)_saturate(1.2)_brightness(0.9)_contrast(1.05)_hue-rotate(6deg)] opacity-[0.94] drop-shadow-[0_8px_28px_rgba(165,191,151,0.12)] sm:drop-shadow-[0_12px_40px_rgba(165,191,151,0.16)]"
               priority
-              sizes="(max-width: 1024px) 90vw, 420px"
+              sizes="(max-width: 1024px) 92vw, 600px"
             />
             <div className="flex gap-2 opacity-80">
               <Sparkle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-apricot animate-sparkle-float" />
@@ -117,7 +119,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* SKEWED TICKER — brand personality strip */}
       <div className="relative -mt-2 mb-2 py-1 overflow-hidden bg-ink-abyss ticker-skew">
         <div className="ticker-unskew py-3 overflow-hidden">
           <div className="flex whitespace-nowrap animate-marquee select-none">
@@ -138,7 +139,6 @@ export default async function HomePage() {
         </div>
       </div>
 
-      {/* BENTO — collections */}
       <LuxuryReveal className="relative z-10">
         <section className="bg-petal px-4 sm:px-6 lg:px-10 py-20 lg:py-28">
         <div className="max-w-[1600px] mx-auto">
@@ -240,7 +240,6 @@ export default async function HomePage() {
         </section>
       </LuxuryReveal>
 
-      {/* FEATURED — editorial rail */}
       <LuxuryReveal y={20} durationMs={1100} className="block">
         <section className="bg-[color-mix(in_srgb,#fff9f3_70%,#f7d595_30%)] py-20 lg:py-28">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
@@ -290,7 +289,6 @@ export default async function HomePage() {
         </section>
       </LuxuryReveal>
 
-      {/* STORY — full-bleed mood */}
       <LuxuryReveal y={24} durationMs={1200} className="block">
         <section className="relative py-24 lg:py-32 overflow-hidden">
         <div

@@ -6,7 +6,9 @@ E-commerce storefront for a cosmetics brand: **Next.js 16 (App Router)**, **Reac
 
 **Last updated:** 2026-04-24
 
-**Brand & UI (at a glance):** The site uses a **mood-board palette** in `app/globals.css` and shared components. The **Auréalis wordmark** appears in the **navbar** (center), the **home hero** (large, right column on desktop / center on mobile) via `components/BrandWordmark.tsx`, and the **footer** (`public/logo-black.png`). The **locale toggle** (English / Arabic) is the pill control in the top bar (switches to `/en/...` or `/ar/...`).
+**Brand & UI (at a glance):** The site uses a **mood-board palette** in `app/globals.css` and shared components. **`components/BrandWordmark.tsx`** uses the transparent **`logo-black.png`** with normal compositing (no white artboard) on both the **home hero** (warm **CSS filter** to match apricot) and the **navbar**. The **footer** also uses the black lockup. The **locale toggle** (English / Arabic) is the pill in the top bar (`/en/...` ↔ `/ar/...`).
+
+**Storefront (at a glance):** Full i18n shop flow — catalog, product PDP, search, **cart** (Zustand), **wishlist** (Zustand), **checkout** (demo order + optional Paymob), **order success** with local order write-through. **Account** area links to **order history** and **order detail** (per-browser `localStorage`), **track order** (ref + email, same store), and **settings** (copy-only until backend auth). Content pages: about, contact, FAQ, shipping, **returns**, legal (privacy, terms), **cookie notice**, **accessibility** statement, and a **directory** (human-facing sitemap). **SEO:** `app/sitemap.ts` and `app/robots.ts` (base URL from `NEXT_PUBLIC_SITE_URL` or localhost). **Errors:** `app/[locale]/not-found.tsx` and `app/[locale]/error.tsx`.
 
 ---
 
@@ -42,23 +44,24 @@ Listens on [http://localhost:3001](http://localhost:3001). Configure `admin/.env
 
 ## Environment
 
-Copy `.env.example` to `.env.local` and fill in values. For Paymob, set at least: `PAYMOB_API_KEY`, `PAYMOB_MERCHANT_ID`, `PAYMOB_INTEGRATION_ID`, `PAYMOB_HMAC_SECRET`, and `NEXT_PUBLIC_SITE_URL` (public URL used in return links). For admin, use a **separate** `admin/.env.local` and never commit real secrets.
+Copy `.env.example` to `.env.local` and fill in values. For Paymob, set at least: `PAYMOB_API_KEY`, `PAYMOB_MERCHANT_ID`, `PAYMOB_INTEGRATION_ID`, `PAYMOB_HMAC_SECRET`, and `NEXT_PUBLIC_SITE_URL` (public URL for return links, sitemap, and `robots.txt`). For local dev without a public URL, the sitemap/robots fall back to a localhost default. For admin, use a **separate** `admin/.env.local` and never commit real secrets.
 
 ## Project structure (short)
 
 ```
-app/                 # App Router: root + [locale]/* routes
+app/                 # App Router: root, sitemap / robots, [locale]/* pages
+  [locale]/          # all shop + content + account (see ARCHITECTURE.md)
   api/paymob/        # paymob/ready, init, return
-components/          # Shared UI (e.g. Navbar, Footer, BrandWordmark, ProductCard)
+components/          # Shared UI: Navbar, Footer, BrandWordmark, ProductCard, ContentPageLayout, …
 i18n/                # next-intl routing + request config
-lib/                 # data, store, supabase, paymob, cart validation
+lib/                 # data, cart store, wishlist, orders (local), checkout-pending, paymob, validate-cart, supabase, …
 messages/            # en.json, ar.json
 proxy.ts             # next-intl locale handling + /api/* rate cap (Next.js 16+ proxy)
 public/              # logo-orange.png, logo-black.png, submark, loader art (Git LFS for binaries per .gitattributes)
 admin/               # second Next app: login + protected dashboard
 ```
 
-Wordmarks and submarks live under `public/`; hero/nav use `BrandWordmark` (orange on petal), footer uses the black logo in `components/Footer.tsx`.
+**Assets:** Wordmarks and submarks live under `public/`. The hero and **navbar** use the black wordmark in `components/BrandWordmark.tsx` (with optional `filter` on the hero); the **footer** uses `public/logo-black.png` in `components/Footer.tsx`.
 
 For diagrams and deeper detail, read [ARCHITECTURE.md](./ARCHITECTURE.md).
 

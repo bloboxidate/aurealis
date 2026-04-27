@@ -5,19 +5,13 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 type LuxuryRevealProps = {
   children: ReactNode;
   className?: string;
-  /** Vertical offset in px (initial). */
   y?: number;
-  /** How long the entrance takes (ms). */
   durationMs?: number;
-  /** Staggered delay after reveal triggers (e.g. index * 80). */
   staggerMs?: number;
 };
 
 const easeLux = 'cubic-bezier(0.22, 1, 0.36, 1)';
 
-/**
- * Scroll-triggered opacity + soft lift. Luxury-appropriate: slow, single easing, runs once.
- */
 export default function LuxuryReveal({
   children,
   className = '',

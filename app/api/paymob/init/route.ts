@@ -75,22 +75,29 @@ export async function POST(request: Request) {
   }
 
   const returnPath = `?locale=${encodeURIComponent(body.locale)}&ref=${encodeURIComponent(ref)}`;
-  const auth = await getAuthToken();
-  const { iframeUrl, orderId, paymentKey } = await createCardPaymentSession({
-    authToken: auth,
-    amountCents: cart.amountCents,
-    merchantOrderId: ref,
-    lines: cart.lines,
-    billing,
-    returnPath,
-  });
+  try {
+    const auth = await getAuthToken();
+    const { iframeUrl, orderId, paymentKey } = await createCardPaymentSession({
+      authToken: auth,
+      amountCents: cart.amountCents,
+      merchantOrderId: ref,
+      lines: cart.lines,
+      billing,
+      returnPath,
+    });
 
-  return NextResponse.json(
-    {
-      iframeUrl,
-      orderId,
-      clientTokenPreview: paymentKey ? `${paymentKey.slice(0, 8)}…` : null,
-    },
-    { status: 200, ...h }
-  );
+    return NextResponse.json(
+      {
+        iframeUrl,
+        orderId,
+        clientTokenPreview: paymentKey ? `${paymentKey.slice(0, 8)}…` : null,
+      },
+      { status: 200, ...h }
+    );
+  } catch (e) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('[api/paymob/init]', e);
+    }
+    return NextResponse.json({ error: 'payment_unavailable' }, { status: 502, ...h });
+  }
 }

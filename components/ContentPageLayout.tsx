@@ -7,9 +7,6 @@ type Props = {
   kicker?: string;
 };
 
-/**
- * Standard inner page: fixed nav, hero title band, main content, footer.
- */
 export function ContentPageLayout({ children, title, kicker }: Props) {
   return (
     <>

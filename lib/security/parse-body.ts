@@ -12,10 +12,6 @@ const jsonErr = (body: object, status: number) =>
     },
   });
 
-/**
- * Reject oversized JSON bodies to reduce DoS / deep-parse abuse.
- * Responses use **no-store** so intermediaries do not cache bodies that may echo client input.
- */
 export async function readJsonWithLimit(
   request: Request,
   maxBytes: number

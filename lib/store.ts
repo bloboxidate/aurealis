@@ -19,7 +19,6 @@ type CartStore = {
   count: () => number;
 };
 
-// Cart in localStorage is for convenience only; do not put secrets or card data here.
 export const useCartStore = create<CartStore>()(
   persist(
     (set, get) => ({

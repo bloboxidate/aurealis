@@ -1,12 +1,16 @@
 {
   "nav": {
+    "menu": "Menu",
+    "menu_aria": "Open site menu",
     "shop": "Shop",
     "about": "About",
     "contact": "Contact",
     "search": "Search",
     "faq": "FAQ",
     "account": "Account",
-    "cart": "Cart"
+    "cart": "Cart",
+    "wishlist": "Wishlist",
+    "track_order": "Track order"
   },
   "home": {
     "hero_tagline": "Beauty Inspired by the Golden Light",
@@ -51,7 +55,9 @@
     "description": "Description",
     "ingredients": "Ingredients",
     "how_to_use": "How to Use",
-    "egp": "EGP"
+    "egp": "EGP",
+    "wishlist_add": "Add to wishlist",
+    "wishlist_remove": "Remove from wishlist"
   },
   "cart": {
     "title": "Your Cart",
@@ -76,8 +82,15 @@
     "help": "Help",
     "shipping": "Shipping & Returns",
     "faq": "FAQ",
+    "returns": "Returns & refunds",
+    "track": "Track an order",
+    "directory": "Sitemap",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
+    "legal_title": "Legal",
+    "cookies": "Cookie notice",
+    "a11y": "Accessibility",
+    "wishlist": "Wishlist",
     "account": "My Account",
     "copyright": "© 2026 Auréalis. All rights reserved."
   },
@@ -177,14 +190,168 @@
     "title": "Thank you",
     "message": "Your order has been received. We will follow up with confirmation details.",
     "ref_label": "Order reference",
+    "cta_order": "View order details",
     "cta_shop": "Continue shopping",
     "cta_home": "Back to home"
   },
   "account": {
     "title": "My account",
     "kicker": "Account",
-    "body": "Sign-in, order history, and saved addresses are not connected yet. This page is a placeholder for your future account area. For help with an order, please contact us.",
+    "welcome": "Hi, {name}.",
+    "body": "Use the links below for orders placed on this device, your wishlist, and tracking. When you are signed in with Supabase, your session is tied to that account. Saved addresses and server-side order history can be added later.",
+    "link_orders": "Order history",
+    "link_wishlist": "Wishlist",
+    "link_track": "Track an order",
+    "link_settings": "Settings & preferences",
+    "link_shop": "Shop",
+    "link_contact": "Contact"
+  },
+  "orders": {
+    "title": "Order history",
+    "kicker": "Account",
+    "intro": "Orders you complete in this browser are stored locally for reference until you clear site data.",
+    "empty": "No orders yet. When you check out, your orders will appear here on this device.",
+    "egp": "EGP",
+    "shop_cta": "Continue shopping"
+  },
+  "orderDetail": {
+    "title": "Order details",
+    "kicker": "Account",
+    "not_found": "We could not find this order. It may have been removed from this device or the link may be incorrect.",
+    "ref": "Reference",
+    "date": "Placed on",
+    "ship_to": "Ship to",
+    "paymob_id": "Payment reference",
+    "line_item": "Item",
+    "qty": "Qty",
+    "line_total": "Subtotal",
+    "total": "Total",
+    "back_list": "All orders"
+  },
+  "wishlist": {
+    "title": "Wishlist",
+    "kicker": "Saved for later",
+    "intro": "Items you save on this device appear here. Open the list on the same browser to see it again.",
+    "empty": "Your wishlist is empty. Save products from the shop with the heart icon.",
+    "shop_cta": "Browse the shop"
+  },
+  "trackOrder": {
+    "title": "Track an order",
+    "kicker": "Service",
+    "intro": "Enter the order reference from your confirmation email and the same email address you used at checkout. Orders are matched to data stored in this browser.",
+    "field_ref": "Order reference",
+    "field_email": "Email",
+    "submit": "Look up order",
+    "not_found": "No order matches those details. Check the reference and email, or contact us for help.",
+    "found": "We found your order.",
+    "view_order": "Open order details",
+    "note": "If you clear browser storage or use another device, your history may not appear here. This is a local demo until accounts are live."
+  },
+  "returns": {
+    "title": "Returns & refunds",
+    "kicker": "Service",
+    "p1": "We want you to be happy with Auréalis. If something is not right, contact us with your order reference and we will guide you through the return process where eligible.",
+    "p2": "Unopened products in their original packaging may be returned within 14 days of delivery, except items marked as final sale. Refunds are issued to the original payment method when possible once we receive and inspect the return.",
+    "p3": "Opened or used products may be refused unless faulty; faulty items are handled in line with local consumer law.",
+    "link_shipping_lead": "For delivery coverage and timeframes, see",
+    "link_shipping_cta": "Shipping & delivery"
+  },
+  "cookies": {
+    "title": "Cookie notice",
+    "kicker": "Legal",
+    "last_updated": "Last updated · January 2026",
+    "p1": "We use only cookies and similar storage needed for the site to work: for example, keeping your language, shopping cart, and essential session state.",
+    "p2": "We do not use third-party advertising cookies in this build. If we add analytics or marketing tools later, we will update this page and, where required, ask for your consent.",
+    "p3": "You can clear cookies and local storage in your browser settings; note that you may be signed out and saved preferences (such as your cart) may be reset."
+  },
+  "accessibility": {
+    "title": "Accessibility",
+    "kicker": "Commitment",
+    "p1": "We are committed to making Auréalis.com easier to use for everyone, including people who rely on assistive technology.",
+    "p2": "We aim for legible type, sufficient contrast, keyboard-friendly navigation, and clear labels for interactive elements. We continue to improve and test as the site grows.",
+    "p3": "If you have difficulty using any part of the site, please tell us so we can help and prioritise improvements.",
+    "contact_lead": "Need help?",
+    "contact_cta": "Contact us"
+  },
+  "directory": {
+    "title": "Sitemap",
+    "kicker": "Site",
+    "intro": "All main pages and products on this site.",
+    "group_shop": "Shop",
+    "group_account": "Account & orders",
+    "group_info": "Information",
+    "group_legal": "Policies",
+    "group_products": "Products",
+    "link_shop": "Shop",
+    "link_cart": "Cart",
+    "link_checkout": "Checkout",
+    "link_wishlist": "Wishlist",
+    "link_search": "Search",
+    "link_account": "My account",
+    "link_login": "Log in",
+    "link_signup": "Sign up",
+    "link_orders": "Order history",
+    "link_track": "Track an order",
+    "link_settings": "Settings",
+    "link_about": "Our story",
+    "link_contact": "Contact",
+    "link_faq": "FAQ",
+    "link_shipping": "Shipping & delivery",
+    "link_returns": "Returns & refunds",
+    "link_privacy": "Privacy",
+    "link_terms": "Terms",
+    "link_cookies": "Cookie notice",
+    "link_a11y": "Accessibility",
+    "link_directory": "Sitemap (this page)"
+  },
+  "accountSettings": {
+    "title": "Settings & preferences",
+    "kicker": "Account",
+    "body": "A full sign-in, profile, and email preference centre is not connected yet. Your wishlist, cart, and order history in this build are kept in this browser.",
+    "newsletter_note": "The newsletter in the site footer is a visual demo. When marketing email is live, you will be able to subscribe and unsubscribe here and in the emails we send."
+  },
+  "auth": {
+    "kicker": "Account",
+    "login": "Log in",
+    "signup": "Sign up",
+    "sign_out": "Log out",
+    "signed_in_as": "Signed in as {name}",
+    "login_title": "Log in",
+    "login_intro": "Use your email and password. Your session is stored securely in your browser.",
+    "login_submit": "Log in",
+    "signup_title": "Create an account",
+    "signup_intro": "Choose a strong password. You may need to confirm your email before your first sign-in.",
+    "signup_submit": "Create account",
+    "no_account": "No account yet?",
+    "have_account": "Already have an account?",
+    "field_name": "Display name (optional)",
+    "field_email": "Email",
+    "field_password": "Password",
+    "field_password_signup": "Password",
+    "password_hint": "At least 8 characters.",
+    "signup_confirm_email": "Check your inbox to confirm your email, then you can sign in.",
+    "error_missing_config": "Sign-in is not available at the moment. Please try again later.",
+    "error_auth_callback": "We could not complete sign-in. Try again or request a new link.",
+    "error_invalid_credentials": "We could not sign you in. Check your email and password.",
+    "error_login_failed": "We could not sign you in. Please try again in a few minutes.",
+    "error_rate_limit": "Too many attempts. Please wait a few minutes and try again.",
+    "error_user_exists": "An account with this email already exists. Try signing in instead.",
+    "error_signup_password": "That password is not strong enough. Use at least 8 characters and mix letters and numbers.",
+    "error_signup_invalid_email": "Check that your email address is correct.",
+    "error_signup_failed": "We could not create your account. Please try again or use a different email."
+  },
+  "notFound": {
+    "kicker": "404",
+    "title": "This page is not here",
+    "body": "The page may have moved, or the link may be out of date.",
+    "cta_home": "Home",
     "cta_shop": "Shop",
-    "cta_contact": "Contact"
+    "switch_lang": "Switch to {lang}"
+  },
+  "errorPage": {
+    "title": "Something went wrong",
+    "body": "We could not load this view. You can try again or go back to the home page.",
+    "retry": "Try again",
+    "cta_home": "Home"
   }
 }

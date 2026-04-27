@@ -1,8 +1,3 @@
-/**
- * Paymob Accept (Egypt) — config only, no secrets in client bundles.
- * @see https://accept.paymob.com/ — register webhooks and copy keys from the dashboard.
- */
-
 const PAYMOB_BASE = 'https://accept.paymob.com';
 
 export function getPaymobBaseUrl(): string {
@@ -18,7 +13,6 @@ export function isPaymobAcceptConfigured(): boolean {
   );
 }
 
-/** Iframe in URL path: often the card integration id or a dedicated iframe id from the dashboard. */
 export function getPaymobIframeId(): string {
   return (
     process.env.PAYMOB_IFRAME_ID ??

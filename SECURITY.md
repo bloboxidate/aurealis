@@ -20,7 +20,7 @@ This file explains what the **application** does to reduce common web risks, and
 | **Transport** | **HSTS** when `VERCEL=1` or `ENABLE_HSTS=1` (set on any production HTTPS host that is not on Vercel). |
 | **Sensitive API responses** | `Cache-Control: no-store` and related cache headers on payment-related JSON and redirects (see `lib/security/secure-api-headers.ts`) so credentials and flow state are not written to shared caches. |
 
-**Supabase** (`lib/supabase.ts`): the client is created **lazily** and returns `null` if env is missing, so a missing config does not crash the app at import time.
+**Supabase** — **Auth** uses `@supabase/ssr`: the **middleware** (see `proxy.ts` and `lib/supabase/middleware.ts`) calls `getUser()` so JWT refresh and session cookies are applied on each navigation. The browser client (`lib/supabase/client.ts`) syncs to those cookies. **Do not** use `getSession()` alone for authorization decisions; `getUser()` (or `getClaims()`) is verified. Enable **Row Level Security (RLS)** on any user-specific tables. Configure **email confirmation**, **MFA**, and **rate limits** in the Supabase project dashboard for production. The legacy `getSupabase()` in `lib/supabase.ts` is thin wrapper; prefer the server/browser modules above.
 
 ---
 

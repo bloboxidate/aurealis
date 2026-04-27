@@ -5,9 +5,6 @@ import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
-/**
- * No secrets. Lets the storefront know if card checkout can start (keys present).
- */
 export function GET() {
   return NextResponse.json(
     {

@@ -7,6 +7,7 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useCartStore } from '@/lib/store';
+import { setPendingCheckoutFromCart } from '@/lib/checkout-pending';
 
 function CheckoutForm() {
   const t = useTranslations('checkout');
@@ -91,8 +92,23 @@ function CheckoutForm() {
 
   const lineItems = items.map((i) => ({ productId: i.product.id, quantity: i.quantity }));
 
-  const onDemo = (e: React.FormEvent) => {
+  const onDemo = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const form = e.currentTarget;
+    if (!form.reportValidity()) return;
+    const fd = new FormData(form);
+    const fullName = String(fd.get('full_name') ?? '');
+    const email = String(fd.get('email') ?? '');
+    const phone = String(fd.get('phone') ?? '');
+    const address = String(fd.get('address') ?? '');
+    const city = String(fd.get('city') ?? '');
+    setPendingCheckoutFromCart(
+      items,
+      total(),
+      { fullName, email, phone, address, city },
+      'demo',
+      locale === 'ar' ? 'ar' : 'en'
+    );
     const id = `AUR-${Date.now().toString(36).toUpperCase()}`;
     clearCart();
     router.push(`/${locale}/checkout/success?ref=${encodeURIComponent(id)}`);
@@ -113,6 +129,13 @@ function CheckoutForm() {
     const city = String(fd.get('city') ?? '');
 
     setCardRedirecting(true);
+    setPendingCheckoutFromCart(
+      items,
+      total(),
+      { fullName, email, phone, address, city },
+      'card',
+      locale === 'ar' ? 'ar' : 'en'
+    );
     try {
       const r = await fetch('/api/paymob/init', {
         method: 'POST',

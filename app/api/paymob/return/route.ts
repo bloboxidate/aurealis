@@ -10,9 +10,6 @@ export const dynamic = 'force-dynamic';
 const RETURN_WINDOW_MS = 60_000;
 const RETURN_MAX = 60;
 
-/**
- * Customer redirect from Paymob after card flow. HMAC is verified; never mark orders paid without this.
- */
 export function GET(request: Request) {
   const url = new URL(request.url);
   const site =
@@ -62,7 +59,6 @@ export function GET(request: Request) {
   );
 }
 
-/** Health / Paymob preflight — no custom headers to avoid information disclosure. */
 export function HEAD() {
   return new NextResponse(null, { status: 200 });
 }

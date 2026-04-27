@@ -2,7 +2,6 @@ type Bucket = { count: number; windowStart: number };
 
 const store = new Map<string, Bucket>();
 
-/** Simple in-process limiter (single Node instance). Use Redis/Upstash in multi-instance production. */
 export function rateLimit(key: string, max: number, windowMs: number): boolean {
   const now = Date.now();
   const b = store.get(key);
