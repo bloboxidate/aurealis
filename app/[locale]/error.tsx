@@ -6,12 +6,13 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
 export default function Error({
-  error: _error,
+  error,
   reset,
 }: {
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  void error;
   const t = useTranslations('errorPage');
   const locale = useLocale();
 

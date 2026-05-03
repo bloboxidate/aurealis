@@ -7,6 +7,7 @@ export const dynamic = 'force-dynamic';
 /**
  * BFF: lists categories from Sariee (GET …/api/frontend/categories/all-categories).
  * Forwards query string if present (per Sariee docs / Postman).
+ * General proxy: GET /api/sariee/v1/frontend/categories/all-categories (same upstream).
  */
 export async function GET(request: Request) {
   const next = new URL(request.url);

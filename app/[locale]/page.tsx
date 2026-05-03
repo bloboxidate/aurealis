@@ -7,7 +7,7 @@ import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
 import NewsletterForm from '@/components/NewsletterForm';
 import LuxuryReveal from '@/components/LuxuryReveal';
-import { products } from '@/lib/data';
+import { getAllProducts } from '@/lib/data';
 
 function Sparkle({ className }: { className?: string }) {
   return (
@@ -28,10 +28,13 @@ const TICKER = [
   'Made in Cairo',
 ];
 
+export const dynamic = 'force-dynamic';
+
 export default async function HomePage() {
   const t = await getTranslations('home');
   const locale = await getLocale();
   const isRtl = locale === 'ar';
+  const products = await getAllProducts();
   const featured = products.filter((p) => p.featured);
   const hero = featured[0];
   const restFeatured = featured.slice(1);

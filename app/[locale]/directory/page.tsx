@@ -1,11 +1,12 @@
 import { getTranslations } from 'next-intl/server';
 import { ContentPageLayout } from '@/components/ContentPageLayout';
 import Link from 'next/link';
-import { products } from '@/lib/data';
+import { getAllProducts } from '@/lib/data';
 
 export default async function DirectoryPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations('directory');
+  const products = await getAllProducts();
 
   const groups: { label: string; items: { href: string; label: string }[] }[] = [
     {

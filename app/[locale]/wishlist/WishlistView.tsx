@@ -5,11 +5,10 @@ import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
 import ProductCard from '@/components/ProductCard';
 import { useWishlistStore } from '@/lib/wishlist-store';
-import { products } from '@/lib/data';
+import type { Product } from '@/lib/data';
 
-export function WishlistView() {
+export function WishlistView({ products }: { products: Product[] }) {
   const t = useTranslations('wishlist');
-  const locale = useLocale();
   const ids = useWishlistStore((s) => s.ids);
   const [mounted, setMounted] = useState(false);
 
@@ -20,7 +19,7 @@ export function WishlistView() {
   const list = useMemo(() => {
     if (!mounted) return [];
     return products.filter((p) => ids.includes(p.id));
-  }, [ids, mounted]);
+  }, [ids, mounted, products]);
 
   if (!mounted) {
     return <div className="h-36 rounded-2xl bg-light/40 animate-pulse" aria-hidden />;

@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { routing } from '@/i18n/routing';
 import { getSafeNextPath } from '@/lib/auth/safe-redirect-path';
+import type { Database } from '@/types/database';
 
 const DEFAULT_NEXT = `/${routing.defaultLocale}/account`;
 
@@ -21,7 +22,7 @@ export async function GET(request: Request) {
     }
 
     const cookieStore = await cookies();
-    const supabase = createServerClient(url, key, {
+    const supabase = createServerClient<Database>(url, key, {
       cookies: {
         getAll() {
           return cookieStore.getAll();

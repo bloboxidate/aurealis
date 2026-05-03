@@ -1,5 +1,5 @@
-import { getProductById } from './data';
-import type { Product } from './data';
+import type { Product } from '@/lib/products/types';
+import { getProductsByIds } from '@/lib/products/service';
 
 export type CartLineInput = { productId: string; quantity: number };
 
@@ -9,22 +9,28 @@ export type ValidateCartResult =
   | { ok: true; lines: ValidatedLine[]; amountCents: number; merchantRef: string }
   | { ok: false; error: string };
 
-export function validateCartLines(
+export async function validateCartLines(
   items: CartLineInput[],
   merchantRef: string
-): ValidateCartResult {
+): Promise<ValidateCartResult> {
   if (!Array.isArray(items) || items.length === 0) {
     return { ok: false, error: 'empty_cart' };
   }
 
   const lines: ValidatedLine[] = [];
+  const ids: string[] = [];
 
   for (const row of items) {
     if (!row?.productId || typeof row.quantity !== 'number' || row.quantity < 1 || row.quantity > 99) {
       return { ok: false, error: 'invalid_item' };
     }
+    ids.push(String(row.productId));
+  }
 
-    const product = getProductById(String(row.productId));
+  const byId = await getProductsByIds(ids);
+
+  for (const row of items) {
+    const product = byId.get(String(row.productId));
     if (!product) {
       return { ok: false, error: 'unknown_product' };
     }

@@ -56,7 +56,7 @@ export async function POST(request: Request) {
   }
 
   const ref = `AUR-${Date.now().toString(36).toUpperCase()}-${randomBytes(4).toString('hex')}`;
-  const cart = validateCartLines(body.items, ref);
+  const cart = await validateCartLines(body.items, ref);
   if (!cart.ok) {
     return NextResponse.json({ error: cart.error }, { status: 400, ...h });
   }

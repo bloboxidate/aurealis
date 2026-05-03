@@ -2,15 +2,22 @@ import 'server-only';
 
 import { getSarieeBaseUrl, getSarieeBearerToken, getSarieeOptionalReferer } from './config';
 
-function buildHeaders(extra?: HeadersInit): Headers {
+/** Authorization + optional Referer + default Accept. Caller may set Content-Type (e.g. multipart). */
+export function buildSarieeAuthHeaders(extra?: HeadersInit): Headers {
   const h = new Headers(extra);
-  h.set('Accept', 'application/json');
-  if (!h.has('Content-Type')) h.set('Content-Type', 'application/json');
   const token = getSarieeBearerToken();
   if (token) h.set('Authorization', `Bearer ${token}`);
   const ref = getSarieeOptionalReferer();
   if (ref) h.set('Referer', ref);
+  if (!h.has('Accept')) h.set('Accept', 'application/json');
   return h;
+}
+
+function ensureJsonContentTypeForBody(headers: Headers, body: BodyInit | null | undefined): void {
+  if (headers.has('Content-Type')) return;
+  if (body === undefined || body === null) return;
+  if (typeof FormData !== 'undefined' && body instanceof FormData) return;
+  headers.set('Content-Type', 'application/json');
 }
 
 export type SarieeInit = RequestInit & { json?: unknown };
@@ -32,11 +39,14 @@ export async function sarieeFetch(path: string, init: SarieeInit = {}): Promise<
   }
 
   const { json, headers: hint, body, ...rest } = init;
-  const headers = buildHeaders(hint);
+  const headers = buildSarieeAuthHeaders(hint);
   const method = rest.method ?? (json !== undefined ? 'POST' : 'GET');
 
   if (json !== undefined) {
+    if (!headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
     return fetch(url, { ...rest, method, headers, body: JSON.stringify(json) });
   }
+
+  ensureJsonContentTypeForBody(headers, body);
   return fetch(url, { ...rest, method, headers, body });
 }

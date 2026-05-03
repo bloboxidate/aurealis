@@ -1,6 +1,6 @@
 # Security model — Auréalis
 
-**Last updated:** 2026-04-24
+**Last updated:** 2026-04-27 — note on `SUPABASE_SERVICE_ROLE_KEY` for admin product management.
 
 This file explains what the **application** does to reduce common web risks, and what must be handled **outside** the app (infrastructure). It is not a legal guarantee; review for your own threat model.
 
@@ -15,6 +15,8 @@ This file explains what the **application** does to reduce common web risks, and
 | **Brute force (API / admin login)** | **Per-IP rate limits:** `proxy.ts` for all `/api/*` (configurable `API_RATE_MAX_PER_MIN`); stricter limit on `POST /api/paymob/init` and on Paymob return redirect; admin login throttled with `checkLoginRate`. |
 | **DoS (application layer)** | JSON **body size caps** (e.g. init 32KB, admin login 24KB). In-memory **rate limits** (per process). |
 | **SQL injection** | The storefront does not run raw SQL. **Supabase** (when used) should only use the client / parameterized queries, never string-concatenated SQL. |
+| **Misconfiguration in production** | `instrumentation.ts` calls `assertProductionConfiguration()` so a production Node process fails fast if `NEXT_PUBLIC_SITE_URL` is missing or not `https`, Paymob keys are partially set, or Supabase URL/key are mismatched. Escape hatch: `SKIP_PRODUCTION_ENV_CHECK=1` (not for real production). |
+| **Health / probes** | `GET /api/health` returns non-cached JSON (`Cache-Control: no-store`); no secrets. |
 | **Command injection** | No shell execution in app code. |
 | **Leaky responses** | Paymob return `HEAD` no longer returns internal headers. Generic **validation_error** (no Zod details) to clients. |
 | **Transport** | **HSTS** when `VERCEL=1` or `ENABLE_HSTS=1` (set on any production HTTPS host that is not on Vercel). |
@@ -38,14 +40,14 @@ This file explains what the **application** does to reduce common web risks, and
 
 - **DDoS / volumetric / network floods** are not fully solvable in Node or Next.js. Use a **WAF** and DDoS protection: **Cloudflare**, **Vercel** (for apps hosted there), **AWS Shield + WAF**, **Azure Front Door**, etc. Rate-based rules and bot management belong here.  
 - **Rate limits** in this app are **in-memory** per instance: they **reset** on deploy and do not coordinate across many servers. For multi-region or multiple replicas, use **Redis / Upstash** (or the provider’s rate-limit product) for shared counters.  
-- **Secrets**: store `PAYMOB_*`, `ADMIN_SESSION_SECRET`, `ADMIN_PASS_HASH`, etc. in a secrets manager; never in git.  
-- **Admin app**: keep it on a private network, VPN, or **IP allowlist**; do not rely on “security through obscurity” on port 3001 alone.  
+- **Secrets**: store `PAYMOB_*`, `ADMIN_SESSION_SECRET`, `ADMIN_PASS_HASH`, **`SUPABASE_SERVICE_ROLE_KEY` (admin only)**, etc. in a secrets manager; never in git. The service role key **must never** appear in the storefront or `NEXT_PUBLIC_*` vars.  
+- **Admin app**: keep it on a private network, VPN, or **IP allowlist**; do not rely on “security through obscurity” on port 3001 alone. Product **writes** go through the admin app with the service role, not the anon key.  
 
 ---
 
 ## CSP and third parties
 
-- The CSP in `next.config.ts` may need new **`connect-src`** or **`img-src`** entries when you add analytics, image CDNs, or new APIs. Tighten `script-src` (e.g. **nonces**) when your deployment supports it.  
+- The CSP in `next.config.ts` may need new **`connect-src`** or **`img-src`** entries when you add analytics, image CDNs, or new APIs. Append extra allowed origins to **`connect-src`** without editing code by setting **`CSP_CONNECT_SRC_EXTRA`** to space-separated tokens (e.g. `https://metrics.example.com wss://socket.example.com`). Tighten `script-src` (e.g. **nonces**) when your deployment supports it.  
 - If `Cross-Origin-Resource-Policy: same-site` blocks a legitimate cross-origin image or script, adjust or remove that header in `next.config.ts` and document the exception.
 
 ---

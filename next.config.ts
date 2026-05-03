@@ -21,9 +21,14 @@ function buildCsp() {
     : "script-src 'self' 'unsafe-inline'";
   const supabaseConnect = "https://*.supabase.co wss://*.supabase.co";
   const sarieeConnect = "https://api.sariee.com";
+  const extraConnect = (process.env.CSP_CONNECT_SRC_EXTRA ?? "")
+    .split(/\s+/)
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .join(" ");
   const connect = isDev
-    ? `connect-src 'self' https: wss: ws: http: https://vercel.live https://*.vercel.app ${supabaseConnect} ${sarieeConnect}`
-    : `connect-src 'self' https://vercel.live https://*.vercel.app ${supabaseConnect} ${sarieeConnect}`;
+    ? `connect-src 'self' https: wss: ws: http: https://vercel.live https://*.vercel.app ${supabaseConnect} ${sarieeConnect}${extraConnect ? ` ${extraConnect}` : ""}`
+    : `connect-src 'self' https://vercel.live https://*.vercel.app ${supabaseConnect} ${sarieeConnect}${extraConnect ? ` ${extraConnect}` : ""}`;
   return [
     "default-src 'self'",
     script,

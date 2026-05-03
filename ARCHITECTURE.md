@@ -1,12 +1,14 @@
 # Auréalis — architecture
 
-**Last updated:** 2026-04-24 — update this date when you change routing, payment flow, admin auth, or deployment layout.
+**Last updated:** 2026-04-27 — update this date when you change routing, payment flow, admin auth, or deployment layout.
+
+**Catalog** — Product rows live in **Supabase** `public.products` (see `supabase/migrations/00002_products.sql`). The **storefront** reads with the anon key via `lib/products/service.ts`. The **admin** app uses `SUPABASE_SERVICE_ROLE_KEY` to list/create/edit/delete at `/products`.
 
 **UX / motion** — `app/globals.css` defines `--ease-luxury` and long hover durations. `components/LuxuryReveal.tsx` provides scroll-in reveals (intersection, once) with optional stagger. Home uses `mesh-hero--ambient`, bento `bento-sheen-layer`, and `app/[locale]/template.tsx` applies a very soft page shell on navigations. `prefers-reduced-motion: reduce` narrows or disables most motion.
 
 **Branding (logo & locale)** — `components/BrandWordmark.tsx` accepts `src` and `blend`. The **home hero** and **navbar** use transparent **`logo-black.png`** with **`blend="none"`** and (on the hero) a warm **CSS `filter`** so the wordmark matches apricot/brand without a multiply white “panel” on the mesh. The **footer** also uses the black lockup. The **language switch** (EN / عربي) in `components/Navbar.tsx` links to the sibling locale. Adjust `BrandWordmark` `width` / `height` and `boxClassName` in the hero, navbar, and (if re-used) any other call site when re-tuning layout.
 
-**Security** — See [SECURITY.md](./SECURITY.md). Summary: `proxy.ts` (Next.js 16 “proxy” convention) rate-limits `/api/*`, Paymob `init` uses Zod + body size limits + sanitization, `next.config` sets CSP/COOP/CORP/HSTS (when enabled), no raw SQL, Supabase is lazy-initialized. DDoS and global abuse require WAF/edge; in-memory rate limits are per process.
+**Security** — See [SECURITY.md](./SECURITY.md). Summary: `proxy.ts` (Next.js 16 “proxy” convention) rate-limits `/api/*`, Paymob `init` uses Zod + body size limits + sanitization, `next.config` sets CSP/COOP/CORP/HSTS (when enabled), optional `CSP_CONNECT_SRC_EXTRA` for extra `connect-src` tokens, `instrumentation.ts` runs production env assertions, `GET /api/health` for probes (no secrets). DDoS and global abuse require WAF/edge; in-memory rate limits are per process.
 
 This document describes how the repository is structured and how major pieces interact. Pair it with `.env.example` for environment variables.
 
@@ -46,19 +48,24 @@ flowchart TB
 | Area | Role |
 |------|------|
 | `app/[locale]/` | All localized **shop and content** routes; includes `not-found.tsx` and `error.tsx` for the locale segment. |
-| `app/sitemap.ts` | Sitemap: static path segments × `en` / `ar`, plus `/product/[slug]` for each `lib/data` product. |
-| `app/robots.ts` | `robots.txt` with `allow: /` and sitemap URL; base from `NEXT_PUBLIC_SITE_URL` or a localhost default. |
+| `app/sitemap.ts` | Sitemap: static path segments × `en` / `ar`, plus `/product/[slug]` for each `lib/data` product; same base URL as `lib/env`. |
+| `app/robots.ts` | `robots.txt` with `allow: /` and sitemap URL; base from `getPublicSiteUrl()` in `lib/env`. |
 | `app/page.tsx` | Root entry; delegates to locale routing as configured. |
 | `proxy.ts` | `next-intl` locale + global `/api/*` rate limit; `matcher` excludes static assets. |
 | `i18n/` | `routing.ts`, `request.ts` — locales `en` / `ar`, message loading. |
 | `messages/` | `en.json`, `ar.json` — all user-facing copy. |
 | `components/` | Shared UI: `Navbar`, `Footer`, `ProductCard`, `ContentPageLayout`, `NewsletterForm`, etc. |
-| `lib/data.ts` | Product catalog (in-repo); **source of truth for prices** server-side. |
+| `lib/data.ts` | Re-exports `Product` type and **Supabase-backed** loaders (`getAllProducts`, etc.) from `lib/products/`. **Source of truth for prices** is `public.products` in Supabase; admin app CRUD at `/products` (service role). |
 | `lib/store.ts` | Zustand **cart**; persisted as `aurealis-cart`. |
 | `lib/wishlist-store.ts` | Zustand **wishlist**; persisted as `aurealis-wishlist`. |
 | `lib/orders-persist.ts` | Client-only: `localStorage` order list (`aurealis-orders`); idempotent append by `ref`; helpers for list and track-order. |
 | `lib/checkout-pending.ts` + `lib/checkout-pending.types.ts` | `sessionStorage` copy of a pending order so `checkout/success` can build a `StoredOrder` when the user returns. |
-| `lib/supabase.ts` | Supabase client (for future data/auth). |
+| `lib/env/` | `getPublicSiteUrl()` / `getMetadataBaseUrl()`; `assert-production.ts` enforces config in `NODE_ENV=production`. |
+| `instrumentation.ts` | Calls `assertProductionConfiguration()` on Node server startup. |
+| `app/api/health` | Liveness JSON for load balancers; `Cache-Control: no-store`. |
+| `types/database.ts` | `Database` type for `createClient<Database>`; keep aligned with `supabase/migrations`. |
+| `supabase/migrations/` | `public.profiles` + RLS + `handle_new_user` trigger (apply in project dashboard or CLI). |
+| `lib/supabase.ts` | Legacy `getSupabase()`; prefer `lib/supabase/client` and `lib/supabase/server`. |
 | `lib/validate-cart.ts` | Server-side recalculation of line totals (piasters) from `productId` + `quantity` only. |
 | `lib/paymob/*` | **Server-only** (via `server-only`): config, Accept API sequence, HMAC redirect verification, request origin helper, in-memory rate limit. |
 | `app/api/paymob/ready` | `GET` — whether card checkout is configured (no secrets). |
@@ -78,6 +85,7 @@ flowchart TB
 | Area | Role |
 |------|------|
 | `app/(protected)/` | Dashboard home at `/`; `layout.tsx` enforces **session cookie** + optional **IP allowlist** (`ADMIN_ALLOWED_IPS`). |
+| `app/(protected)/products` | **Product CRUD** (list, new, edit, delete) using **Supabase service role**; link from admin home. |
 | `app/login/` | Password login; `layout.tsx` applies same IP gate. |
 | `app/api/auth/login` | `POST` JSON `{ password }`; rate limited; sets HttpOnly session cookie. |
 | `app/api/auth/logout` | `POST`; requires valid session; clears cookie. |

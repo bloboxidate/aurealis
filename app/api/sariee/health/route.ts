@@ -41,6 +41,7 @@ export async function GET() {
       configured: true,
       baseUrl: getSarieeBaseUrl(),
       upstreamStatus: upstream.status,
+      proxyPattern: '/api/sariee/v1/{frontend|company}/… → Sariee /api/{frontend|company}/…',
       ...devPayload,
     },
     { status: 200, headers: withNoStore() }

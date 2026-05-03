@@ -1,8 +1,10 @@
 import type { MetadataRoute } from 'next';
-import { products } from '@/lib/data';
+import { getAllProducts } from '@/lib/data';
+import { getPublicSiteUrl } from '@/lib/env';
 
-const BASE =
-  (typeof process !== 'undefined' && process.env.NEXT_PUBLIC_SITE_URL) || 'http://localhost:3000';
+const BASE = getPublicSiteUrl();
+
+export const dynamic = 'force-dynamic';
 
 const LOCALE = ['en', 'ar'] as const;
 
@@ -32,7 +34,8 @@ const STATIC_SEGMENTS = [
   'directory',
 ] as const;
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const products = await getAllProducts();
   const urls: MetadataRoute.Sitemap = [];
 
   for (const loc of LOCALE) {
