@@ -11,6 +11,8 @@ const LOCALE = ['en', 'ar'] as const;
 const STATIC_SEGMENTS = [
   '',
   'shop',
+  'collections',
+  'blog',
   'cart',
   'checkout',
   'checkout/success',

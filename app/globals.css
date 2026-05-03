@@ -218,8 +218,8 @@ body {
 .reveal-children > *:nth-child(4) { animation-delay: 0.28s; }
 .reveal-children > *:nth-child(5) { animation-delay: 0.35s; }
 
-.ticker-skew { transform: skewY(-1.2deg); }
-.ticker-unskew { transform: skewY(1.2deg); }
+.ticker-skew { transform: none; }
+.ticker-unskew { transform: none; }
 
 @keyframes sparkle-loader-rotate {
   from { transform: rotate(0deg); }

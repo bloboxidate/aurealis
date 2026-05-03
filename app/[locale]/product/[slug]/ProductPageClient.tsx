@@ -19,8 +19,19 @@ export default function ProductPageClient({ product }: { product: Product }) {
   const [added, setAdded] = useState(false);
   const [activeTab, setActiveTab] = useState<'description' | 'ingredients' | 'how_to_use'>('description');
 
+
   const name = locale === 'ar' ? product.name_ar : product.name_en;
   const description = locale === 'ar' ? product.description_ar : product.description_en;
+  const ingredients = locale === 'ar' ? product.ingredients_ar || product.ingredients : product.ingredients;
+  const howToUse = locale === 'ar' ? product.how_to_use_ar || product.how_to_use : product.how_to_use;
+
+  const availableTabs = (
+    [
+      'description',
+      ...(ingredients ? ['ingredients' as const] : []),
+      ...(howToUse ? ['how_to_use' as const] : []),
+    ] as const
+  );
 
   const handleAdd = () => {
     if (!product.in_stock) return;
@@ -135,31 +146,29 @@ export default function ProductPageClient({ product }: { product: Product }) {
               </div>
 
               <div className="space-y-4 max-w-2xl">
-                <div className="flex flex-wrap gap-1 border-b border-border">
-                  {(['description', 'ingredients', 'how_to_use'] as const).map((tab) => (
-                    <button
-                      key={tab}
-                      type="button"
-                      onClick={() => setActiveTab(tab)}
-                      className={`py-3 px-3 sm:px-4 text-[10px] sm:text-xs tracking-[0.25em] sm:tracking-[0.3em] uppercase font-bold transition-colors -mb-px ${
-                        activeTab === tab
-                          ? 'border-b-2 border-apricot text-apricot'
-                          : 'text-muted hover:text-ink'
-                      }`}
-                      style={{ fontFamily: 'var(--font-ui)' }}
-                    >
-                      {t(tab)}
-                    </button>
-                  ))}
-                </div>
+                {availableTabs.length > 1 && (
+                  <div className="flex flex-wrap gap-1 border-b border-border">
+                    {availableTabs.map((tab) => (
+                      <button
+                        key={tab}
+                        type="button"
+                        onClick={() => setActiveTab(tab)}
+                        className={`py-3 px-3 sm:px-4 text-[10px] sm:text-xs tracking-[0.25em] sm:tracking-[0.3em] uppercase font-bold transition-colors -mb-px ${
+                          activeTab === tab
+                            ? 'border-b-2 border-apricot text-apricot'
+                            : 'text-muted hover:text-ink'
+                        }`}
+                        style={{ fontFamily: 'var(--font-ui)' }}
+                      >
+                        {t(tab)}
+                      </button>
+                    ))}
+                  </div>
+                )}
                 <div className="text-ink/75 text-sm sm:text-base leading-relaxed py-2" style={{ fontFamily: 'var(--font-body)' }}>
                   {activeTab === 'description' && description}
-                  {activeTab === 'ingredients' && (
-                    <span className="text-muted italic">Ingredients list coming soon.</span>
-                  )}
-                  {activeTab === 'how_to_use' && (
-                    <span className="text-muted italic">Usage instructions coming soon.</span>
-                  )}
+                  {activeTab === 'ingredients' && ingredients}
+                  {activeTab === 'how_to_use' && howToUse}
                 </div>
               </div>
             </div>

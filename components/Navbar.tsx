@@ -137,6 +137,8 @@ export default function Navbar() {
             {(
               [
                 'shop',
+                'collections',
+                'blog',
                 'about',
                 'contact',
                 'search',

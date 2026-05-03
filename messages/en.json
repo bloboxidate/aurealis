@@ -10,7 +10,9 @@
     "account": "Account",
     "cart": "Cart",
     "wishlist": "Wishlist",
-    "track_order": "Track order"
+    "track_order": "Track order",
+    "collections": "Collections",
+    "blog": "Journal"
   },
   "home": {
     "hero_tagline": "Beauty Inspired by the Golden Light",
@@ -174,6 +176,7 @@
     "field_phone": "Phone",
     "field_address": "Address",
     "field_city": "City",
+    "city_select_placeholder": "Select city",
     "field_promo": "Promo code (optional)",
     "promo_placeholder": "Enter code",
     "place_order": "Place order",
@@ -194,7 +197,7 @@
     "title": "My account",
     "kicker": "Account",
     "welcome": "Hi, {name}.",
-    "body": "Use the links below for orders placed on this device, your wishlist, and tracking. When you are signed in with Supabase, your session is tied to that account. Saved addresses and server-side order history can be added later.",
+    "body": "Use the links below for orders, your wishlist, and order tracking. Sign in to view your full order history.",
     "link_orders": "Order history",
     "link_wishlist": "Wishlist",
     "link_track": "Track an order",
@@ -279,6 +282,8 @@
     "group_legal": "Policies",
     "group_products": "Products",
     "link_shop": "Shop",
+    "link_collections": "Collections",
+    "link_blog": "Journal",
     "link_cart": "Cart",
     "link_checkout": "Checkout",
     "link_wishlist": "Wishlist",
@@ -335,6 +340,27 @@
     "error_signup_password": "That password is not strong enough. Use at least 8 characters and mix letters and numbers.",
     "error_signup_invalid_email": "Check that your email address is correct.",
     "error_signup_failed": "We could not create your account. Please try again or use a different email."
+  },
+  "blog": {
+    "kicker": "Journal",
+    "title": "Journal",
+    "subtitle": "Beauty tips, routines, and stories",
+    "back": "← Back to journal",
+    "empty": "No posts yet. Check back soon.",
+    "read_more": "Read more"
+  },
+  "collections": {
+    "kicker": "Collections",
+    "title": "Collections",
+    "back": "← Back to collections",
+    "empty": "No collections yet.",
+    "empty_products": "No products in this collection.",
+    "products_count": "items"
+  },
+  "category": {
+    "kicker": "Category",
+    "back_shop": "Shop",
+    "empty": "No products in this category."
   },
   "notFound": {
     "kicker": "404",

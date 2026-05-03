@@ -13,4 +13,8 @@ export type Product = {
   image: string;
   in_stock: boolean;
   featured: boolean;
+  ingredients: string;
+  ingredients_ar: string;
+  how_to_use: string;
+  how_to_use_ar: string;
 };

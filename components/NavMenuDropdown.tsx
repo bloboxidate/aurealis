@@ -7,6 +7,8 @@ import { useWishlistStore } from '@/lib/wishlist-store';
 
 const NAV_LINK_KEYS = [
   'shop',
+  'collections',
+  'blog',
   'about',
   'contact',
   'search',

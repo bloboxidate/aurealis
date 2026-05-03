@@ -14,6 +14,7 @@ export const sarieeCheckoutBodySchema = z.object({
   phone: z.string().min(3).max(40).regex(/^[+0-9.\s()-]+$/u),
   address: z.string().min(1).max(2000),
   city: z.string().min(1).max(200),
+  cityId: z.union([z.string(), z.number()]).optional(),
   promoCode: z.string().max(50).optional(),
   paymentMethodId: z.union([z.string(), z.number()]).optional(),
   sarieeSession: z.string().max(512).optional(),

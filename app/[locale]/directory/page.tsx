@@ -13,6 +13,8 @@ export default async function DirectoryPage({ params }: { params: Promise<{ loca
       label: t('group_shop'),
       items: [
         { label: t('link_shop'), href: `/${locale}/shop` },
+        { label: t('link_collections'), href: `/${locale}/collections` },
+        { label: t('link_blog'), href: `/${locale}/blog` },
         { label: t('link_cart'), href: `/${locale}/cart` },
         { label: t('link_checkout'), href: `/${locale}/checkout` },
         { label: t('link_wishlist'), href: `/${locale}/wishlist` },

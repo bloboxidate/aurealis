@@ -8,6 +8,8 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useCartStore } from '@/lib/store';
 
+type City = { id: string | number; name: string; name_ar: string };
+
 function CheckoutForm() {
   const t = useTranslations('checkout');
   const tProduct = useTranslations('product');
@@ -20,8 +22,19 @@ function CheckoutForm() {
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [promoCode, setPromoCode] = useState('');
+  const [cities, setCities] = useState<City[]>([]);
+  const [selectedCityId, setSelectedCityId] = useState<string | number | ''>('');
 
   useEffect(() => { setMounted(true); }, []);
+
+  useEffect(() => {
+    fetch('/api/sariee/cities', { cache: 'no-store' })
+      .then((r) => r.json())
+      .then((d: { cities?: City[] }) => {
+        if (d.cities?.length) setCities(d.cities);
+      })
+      .catch(() => {});
+  }, []);
 
   const urlError = search.get('error');
   useEffect(() => {
@@ -78,6 +91,10 @@ function CheckoutForm() {
     setSubmitting(true);
 
     const fd = new FormData(form);
+    const cityName = cities.find((c) => String(c.id) === String(selectedCityId))
+      ?.[locale === 'ar' ? 'name_ar' : 'name']
+      ?? String(fd.get('city') ?? '');
+
     const payload = {
       locale,
       items: lineItems,
@@ -85,7 +102,8 @@ function CheckoutForm() {
       email: String(fd.get('email') ?? ''),
       phone: String(fd.get('phone') ?? ''),
       address: String(fd.get('address') ?? ''),
-      city: String(fd.get('city') ?? ''),
+      city: cityName,
+      cityId: selectedCityId !== '' ? selectedCityId : undefined,
       promoCode: promoCode.trim() || undefined,
     };
 
@@ -194,12 +212,33 @@ function CheckoutForm() {
                 >
                   {t('field_city')}
                 </label>
-                <input
-                  name="city"
-                  type="text"
-                  required
-                  className="w-full rounded-xl border border-border bg-petal px-4 py-2.5 text-sm"
-                />
+                {cities.length > 0 ? (
+                  <select
+                    name="city"
+                    required
+                    value={String(selectedCityId)}
+                    onChange={(e) => {
+                      const opt = cities.find((c) => String(c.id) === e.target.value);
+                      setSelectedCityId(opt ? opt.id : '');
+                    }}
+                    className="w-full rounded-xl border border-border bg-petal px-4 py-2.5 text-sm text-ink"
+                    style={{ fontFamily: 'var(--font-body)' }}
+                  >
+                    <option value="">{t('city_select_placeholder')}</option>
+                    {cities.map((c) => (
+                      <option key={String(c.id)} value={String(c.id)}>
+                        {locale === 'ar' ? c.name_ar || c.name : c.name}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <input
+                    name="city"
+                    type="text"
+                    required
+                    className="w-full rounded-xl border border-border bg-petal px-4 py-2.5 text-sm"
+                  />
+                )}
               </div>
               <div>
                 <label

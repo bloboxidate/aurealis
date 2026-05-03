@@ -144,6 +144,23 @@ export async function addItemsToSarieeCart(
   return { ok: true };
 }
 
+export async function setCartCity(
+  cartId: string,
+  cityId: string | number,
+  opts?: { sarieeSession?: string | null }
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const res = await sarieeFetch('/api/frontend/cart/state', {
+    method: 'PUT',
+    json: { cart_id: cartId, city_id: cityId },
+    sarieeSession: opts?.sarieeSession,
+  });
+  if (!res.ok) {
+    const json = tryParse(await res.text());
+    return { ok: false, error: sarieeUpstreamMessage(json, `set_city_failed_${res.status}`) };
+  }
+  return { ok: true };
+}
+
 export async function applySarieePromo(
   cartId: string,
   code: string,

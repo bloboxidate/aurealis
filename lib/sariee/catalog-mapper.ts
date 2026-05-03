@@ -99,5 +99,9 @@ export function mapSarieeItemToProduct(raw: unknown): Product | null {
     image: firstImageUrl(r),
     in_stock: inStock(r),
     featured: featured(r),
+    ingredients: str(r.ingredients ?? r.ingredients_en ?? r.composition ?? ''),
+    ingredients_ar: str(r.ingredients_ar ?? r.ingredients_arabic ?? r.ingredients ?? ''),
+    how_to_use: str(r.how_to_use ?? r.how_to_use_en ?? r.usage ?? r.instructions ?? ''),
+    how_to_use_ar: str(r.how_to_use_ar ?? r.how_to_use_arabic ?? r.how_to_use ?? ''),
   };
 }

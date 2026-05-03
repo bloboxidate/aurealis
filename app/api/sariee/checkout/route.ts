@@ -7,6 +7,7 @@ import { validateCartLines } from '@/lib/validate-cart';
 import {
   initSarieeCart,
   addItemsToSarieeCart,
+  setCartCity,
   applySarieePromo,
   getSarieePaymentMethods,
   sarieeCheckoutAction,
@@ -61,14 +62,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'cart_add_failed', detail: addResult.error }, { status: 502, ...h });
   }
 
-  // 3. Apply promo code (optional — don't fail checkout if it errors)
+  // 3. Set shipping city (optional — don't fail checkout if it errors)
+  if (body.cityId !== undefined) {
+    await setCartCity(cartId, body.cityId, sessionOpts);
+  }
+
+  // 4. Apply promo code (optional — don't fail checkout if it errors)
   let promoDiscount: number | undefined;
   if (body.promoCode) {
     const promoResult = await applySarieePromo(cartId, body.promoCode, sessionOpts);
     if (promoResult.ok) promoDiscount = promoResult.discount;
   }
 
-  // 4. Get available payment methods and pick one
+  // 5. Get available payment methods and pick one
   let paymentMethodId: string | number = body.paymentMethodId ?? 1;
   if (!body.paymentMethodId) {
     const methodsResult = await getSarieePaymentMethods(cartId, sessionOpts);
@@ -81,7 +87,7 @@ export async function POST(request: Request) {
     }
   }
 
-  // 5. Execute checkout — creates the order in Sariee
+  // 6. Execute checkout — creates the order in Sariee
   const checkoutResult = await sarieeCheckoutAction(
     cartId,
     {
