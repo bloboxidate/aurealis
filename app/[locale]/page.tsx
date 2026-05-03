@@ -293,7 +293,13 @@ export default async function HomePage() {
         <div
           className="absolute inset-0"
           style={{
-            background: 'linear-gradient(135deg, color-mix(in srgb, #a5bf97 35%, #bfb5e8 65%) 0%, #f7d595 50%, #fff9f3 100%)',
+            background: [
+              'radial-gradient(ellipse 70% 60% at 0% 50%, color-mix(in srgb, #f07840 28%, transparent), transparent 60%)',
+              'radial-gradient(ellipse 55% 55% at 100% 50%, color-mix(in srgb, #6db35a 22%, transparent), transparent 60%)',
+              'radial-gradient(ellipse 60% 50% at 50% 0%, color-mix(in srgb, #f5c431 22%, transparent), transparent 55%)',
+              'radial-gradient(ellipse 50% 55% at 50% 100%, color-mix(in srgb, #8b7fd4 28%, transparent), transparent 60%)',
+              '#fffaf5',
+            ].join(', '),
           }}
         />
         <div
@@ -334,7 +340,7 @@ export default async function HomePage() {
       </LuxuryReveal>
 
       <div className="flex h-2">
-        {['#f8ae7f', '#f7d595', '#a5bf97', '#bfb5e8', '#fff9f3'].map((c) => (
+        {['#f07840', '#f5c431', '#6db35a', '#8b7fd4', '#fffaf5'].map((c) => (
           <div key={c} className="flex-1" style={{ backgroundColor: c }} />
         ))}
       </div>
