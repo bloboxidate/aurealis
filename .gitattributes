@@ -35,3 +35,13 @@
 # "Invalid PNG signature" on next build.
 app/icon.png -filter -diff -merge
 app/apple-icon.png -filter -diff -merge
+
+# Anything under /public is loaded by URL in the browser; LFS pointers break at runtime
+# on hosts that clone without Git LFS (e.g. Vercel) — broken logos and static images.
+public/**/*.png -filter -diff -merge
+public/**/*.jpg -filter -diff -merge
+public/**/*.jpeg -filter -diff -merge
+public/**/*.webp -filter -diff -merge
+public/**/*.gif -filter -diff -merge
+public/**/*.ico -filter -diff -merge
+public/**/*.avif -filter -diff -merge
