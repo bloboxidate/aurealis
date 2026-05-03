@@ -301,8 +301,9 @@ export default async function HomePage() {
         </section>
       </LuxuryReveal>
 
-      <div className="relative h-px mx-8 sm:mx-16 lg:mx-24" aria-hidden>
-        <div className="absolute inset-0 rounded-full" style={{ background: 'linear-gradient(to right, transparent, color-mix(in srgb, #f07840 40%, #8b7fd4 30%), color-mix(in srgb, #f5c431 35%, #6db35a 25%), transparent)' }} />
+      <div className="relative h-[3px] mx-6 sm:mx-12 lg:mx-20" aria-hidden>
+        <div className="absolute inset-0 rounded-full" style={{ background: 'linear-gradient(to right, transparent 0%, #f07840 20%, #f5c431 40%, #6db35a 60%, #8b7fd4 80%, transparent 100%)', opacity: 0.7 }} />
+        <div className="absolute inset-0 rounded-full blur-sm" style={{ background: 'linear-gradient(to right, transparent 0%, #f07840 20%, #f5c431 40%, #6db35a 60%, #8b7fd4 80%, transparent 100%)', opacity: 0.4 }} />
       </div>
 
       <LuxuryReveal y={24} durationMs={1200} className="block">
