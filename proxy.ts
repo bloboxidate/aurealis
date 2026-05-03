@@ -19,6 +19,14 @@ export async function proxy(request: NextRequest) {
   if (request.nextUrl.pathname === '/admin' || request.nextUrl.pathname.startsWith('/admin/')) {
     return updateSession(request, NextResponse.next());
   }
+  /**
+   * Supabase Auth callback lives at `app/auth/callback` → `/auth/callback`.
+   * next-intl defaults to `localePrefix: 'always'`, which would redirect this to
+   * `/en/auth/...` and break email confirmation + OAuth code exchange.
+   */
+  if (request.nextUrl.pathname === '/auth' || request.nextUrl.pathname.startsWith('/auth/')) {
+    return updateSession(request, NextResponse.next());
+  }
   const intlResponse = intl(request);
   return updateSession(request, intlResponse);
 }

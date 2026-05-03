@@ -39,7 +39,7 @@ export function LoginForm() {
         setError(t(loginErrorMessageKey(err)));
         return;
       }
-      router.push(`/${locale}/account`);
+      await router.push(`/${locale}/account`);
       router.refresh();
     })();
   };

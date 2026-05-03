@@ -50,7 +50,7 @@ export function SignupForm() {
         return;
       }
       if (data.session) {
-        router.push(`/${locale}/account`);
+        await router.push(`/${locale}/account`);
         router.refresh();
         return;
       }
