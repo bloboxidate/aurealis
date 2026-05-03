@@ -11,7 +11,7 @@ export default async function NotFound() {
   return (
     <>
       <Navbar />
-      <div className="min-h-[70vh] bg-petal flex flex-col items-center justify-center px-4 pt-28 sm:pt-32 pb-20 text-center max-w-lg mx-auto">
+      <div className="min-h-[70vh] bg-petal flex flex-col items-center justify-center px-4 pt-44 sm:pt-52 pb-20 text-center max-w-lg mx-auto">
         <p className="text-[10px] tracking-[0.4em] uppercase font-bold text-apricot mb-2" style={{ fontFamily: 'var(--font-ui)' }}>
           {t('kicker')}
         </p>

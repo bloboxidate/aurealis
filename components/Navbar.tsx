@@ -46,7 +46,7 @@ export default function Navbar() {
           regardless of how wide the left (menu) and right (auth/cart) sides are.
           Logo lives in a real grid cell — avoids iOS Safari paint bugs with backdrop-blur.
         */}
-        <div className="relative grid w-full min-h-24 grid-cols-[1fr_auto_1fr] items-center sm:min-h-[6.5rem] md:min-h-[7rem]">
+        <div className="relative grid w-full min-h-36 grid-cols-[1fr_auto_1fr] items-center sm:min-h-44 md:min-h-48">
           <div className="relative z-20 flex shrink-0 items-center">
             <div className="hidden md:block">
               <NavMenuDropdown />
@@ -74,7 +74,7 @@ export default function Navbar() {
           <div className="relative z-10 flex items-center justify-center isolate px-2">
             <Link
               href={`/${locale}`}
-              className="group flex items-center justify-center outline-none ring-0 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] md:hover:scale-[1.02] h-16 w-[200px] sm:h-20 sm:w-[280px] md:w-[340px] lg:w-[400px] xl:h-[5.5rem] xl:w-[440px]"
+              className="group flex items-center justify-center outline-none ring-0 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] md:hover:scale-[1.02] h-28 w-[340px] sm:h-36 sm:w-[460px] md:h-40 md:w-[540px] lg:w-[600px] xl:h-44 xl:w-[660px]"
             >
               <BrandWordmark
                 src="/logo-black.png"

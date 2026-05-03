@@ -24,7 +24,7 @@ function SearchResults({ products }: { products: Product[] }) {
 
   return (
     <div className="min-h-screen bg-petal">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 pt-28 sm:pt-32">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 pt-44 sm:pt-52">
         <h1
           className="text-[clamp(1.75rem,4vw,2.5rem)] font-light italic text-ink mb-8"
           style={{ fontFamily: 'var(--font-display)' }}

@@ -47,7 +47,7 @@ function CheckoutForm() {
     return (
       <>
         <Navbar />
-        <div className="min-h-screen bg-petal pt-32" />
+        <div className="min-h-screen bg-petal pt-52" />
         <Footer />
       </>
     );
@@ -57,7 +57,7 @@ function CheckoutForm() {
     return (
       <>
         <Navbar />
-        <div className="min-h-screen bg-petal px-4 pt-28 sm:pt-32 pb-20 max-w-lg mx-auto text-center">
+        <div className="min-h-screen bg-petal px-4 pt-44 sm:pt-52 pb-20 max-w-lg mx-auto text-center">
           <h1
             className="text-2xl font-light italic text-ink mb-4"
             style={{ fontFamily: 'var(--font-display)' }}
@@ -147,7 +147,7 @@ function CheckoutForm() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-petal px-4 sm:px-6 py-10 pt-28 sm:pt-32">
+      <div className="min-h-screen bg-petal px-4 sm:px-6 py-10 pt-44 sm:pt-52">
         <div className="max-w-3xl mx-auto">
           <h1
             className="text-[clamp(1.75rem,4vw,2.5rem)] font-light italic text-ink mb-10"
@@ -315,7 +315,7 @@ export default function CheckoutPage() {
     <Suspense fallback={
       <>
         <Navbar />
-        <div className="min-h-screen bg-petal pt-32" />
+        <div className="min-h-screen bg-petal pt-52" />
         <Footer />
       </>
     }>

@@ -34,7 +34,7 @@ export default async function CollectionPage({
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-petal pt-28 sm:pt-32 pb-20">
+      <div className="min-h-screen bg-petal pt-44 sm:pt-52 pb-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <p className="text-sm text-muted mb-6">
             <Link href={`/${locale}/collections`} className="text-apricot hover:underline">

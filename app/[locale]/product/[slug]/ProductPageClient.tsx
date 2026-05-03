@@ -46,7 +46,7 @@ export default function ProductPageClient({ product }: { product: Product }) {
     <>
       <Navbar />
       <div className="min-h-screen bg-petal">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 pt-28 sm:pt-32 pb-16 sm:pb-20">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 pt-44 sm:pt-52 pb-16 sm:pb-20">
           <nav
             className="flex items-center flex-wrap gap-x-2 gap-y-1 text-[10px] sm:text-xs text-muted tracking-[0.25em] uppercase font-bold mb-8 sm:mb-12"
             style={{ fontFamily: 'var(--font-ui)' }}

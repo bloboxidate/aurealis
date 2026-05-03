@@ -18,7 +18,7 @@ function SuccessBody() {
     : null;
 
   return (
-    <div className="min-h-screen bg-petal px-4 pt-28 sm:pt-32 pb-20 text-center max-w-lg mx-auto">
+    <div className="min-h-screen bg-petal px-4 pt-44 sm:pt-52 pb-20 text-center max-w-lg mx-auto">
       <p className="text-4xl mb-4" aria-hidden>✦</p>
       <h1
         className="text-2xl sm:text-3xl font-light italic text-ink mb-4"

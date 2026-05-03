@@ -16,7 +16,7 @@ export default function CartPage() {
     <>
       <Navbar />
       <div className="min-h-screen bg-petal">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-16 pt-28 sm:pt-32">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-16 pt-44 sm:pt-52">
           <h1
             className="text-[clamp(2rem,5vw,3rem)] font-light italic text-ink mb-10 sm:mb-14"
             style={{ fontFamily: 'var(--font-display)' }}
