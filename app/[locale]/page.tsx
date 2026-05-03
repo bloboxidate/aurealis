@@ -239,8 +239,21 @@ export default async function HomePage() {
         </section>
       </LuxuryReveal>
 
+      <div
+        className="relative"
+        style={{
+          background: [
+            'radial-gradient(ellipse 75% 55% at 0% 25%, color-mix(in srgb, #f07840 60%, transparent), transparent 58%)',
+            'radial-gradient(ellipse 65% 50% at 100% 30%, color-mix(in srgb, #f5c431 50%, transparent), transparent 55%)',
+            'radial-gradient(ellipse 70% 55% at 100% 75%, color-mix(in srgb, #6db35a 55%, transparent), transparent 58%)',
+            'radial-gradient(ellipse 65% 55% at 15% 80%, color-mix(in srgb, #8b7fd4 60%, transparent), transparent 58%)',
+            'radial-gradient(ellipse 50% 45% at 55% 55%, color-mix(in srgb, #f5c431 35%, transparent), transparent 52%)',
+            'color-mix(in srgb, #f07840 8%, color-mix(in srgb, #8b7fd4 10%, #f5c431 15%))',
+          ].join(', '),
+        }}
+      >
       <LuxuryReveal y={20} durationMs={1100} className="block">
-        <section className="relative py-20 lg:py-28" style={{ background: ['radial-gradient(ellipse 90% 60% at 0% 100%, color-mix(in srgb, #f07840 30%, transparent), transparent 60%)', 'radial-gradient(ellipse 80% 50% at 100% 100%, color-mix(in srgb, #8b7fd4 25%, transparent), transparent 55%)', 'radial-gradient(ellipse 70% 50% at 50% 100%, color-mix(in srgb, #6db35a 20%, transparent), transparent 55%)', 'linear-gradient(to bottom, #fffaf5 0%, color-mix(in srgb, #fffaf5 55%, transparent) 70%, transparent 100%)'].join(', ') }}>
+        <section className="relative py-20 lg:py-28 bg-transparent">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 lg:mb-16">
             <div>
@@ -289,22 +302,9 @@ export default async function HomePage() {
       </LuxuryReveal>
 
       <LuxuryReveal y={24} durationMs={1200} className="block">
-        <section className="relative py-24 lg:py-32 overflow-hidden">
+        <section className="relative py-24 lg:py-32 overflow-hidden bg-transparent">
         <div
-          className="absolute inset-0"
-          style={{
-            background: [
-              'radial-gradient(ellipse 80% 70% at 0% 40%, color-mix(in srgb, #f07840 65%, transparent), transparent 55%)',
-              'radial-gradient(ellipse 70% 60% at 100% 55%, color-mix(in srgb, #6db35a 55%, transparent), transparent 55%)',
-              'radial-gradient(ellipse 65% 55% at 55% 0%, color-mix(in srgb, #f5c431 50%, transparent), transparent 52%)',
-              'radial-gradient(ellipse 60% 65% at 30% 100%, color-mix(in srgb, #8b7fd4 65%, transparent), transparent 55%)',
-              'radial-gradient(ellipse 40% 40% at 75% 80%, color-mix(in srgb, #f07840 40%, transparent), transparent 50%)',
-              '#fffaf5',
-            ].join(', '),
-          }}
-        />
-        <div
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(90vw,720px)] opacity-[0.08] pointer-events-none"
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(90vw,720px)] opacity-[0.06] pointer-events-none"
           aria-hidden
         >
           <Image src="/submark.png" alt="" width={600} height={600} className="w-full h-auto" />
@@ -339,11 +339,6 @@ export default async function HomePage() {
         </div>
         </section>
       </LuxuryReveal>
-
-      <div className="flex h-2">
-        {['#f07840', '#f5c431', '#6db35a', '#8b7fd4', '#fffaf5'].map((c) => (
-          <div key={c} className="flex-1" style={{ backgroundColor: c }} />
-        ))}
       </div>
 
       <LuxuryReveal y={16} durationMs={1000} className="block">
