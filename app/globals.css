@@ -221,6 +221,9 @@ body {
 .ticker-skew { transform: none; }
 .ticker-unskew { transform: none; }
 
+/* Arabic/RTL: letter-spacing disconnects cursive ligatures — always reset to 0 */
+[dir="rtl"] * { letter-spacing: 0 !important; }
+
 @keyframes sparkle-loader-rotate {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
