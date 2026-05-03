@@ -294,10 +294,11 @@ export default async function HomePage() {
           className="absolute inset-0"
           style={{
             background: [
-              'radial-gradient(ellipse 70% 60% at 0% 50%, color-mix(in srgb, #f07840 28%, transparent), transparent 60%)',
-              'radial-gradient(ellipse 55% 55% at 100% 50%, color-mix(in srgb, #6db35a 22%, transparent), transparent 60%)',
-              'radial-gradient(ellipse 60% 50% at 50% 0%, color-mix(in srgb, #f5c431 22%, transparent), transparent 55%)',
-              'radial-gradient(ellipse 50% 55% at 50% 100%, color-mix(in srgb, #8b7fd4 28%, transparent), transparent 60%)',
+              'radial-gradient(ellipse 80% 70% at 0% 40%, color-mix(in srgb, #f07840 65%, transparent), transparent 55%)',
+              'radial-gradient(ellipse 70% 60% at 100% 55%, color-mix(in srgb, #6db35a 55%, transparent), transparent 55%)',
+              'radial-gradient(ellipse 65% 55% at 55% 0%, color-mix(in srgb, #f5c431 50%, transparent), transparent 52%)',
+              'radial-gradient(ellipse 60% 65% at 30% 100%, color-mix(in srgb, #8b7fd4 65%, transparent), transparent 55%)',
+              'radial-gradient(ellipse 40% 40% at 75% 80%, color-mix(in srgb, #f07840 40%, transparent), transparent 50%)',
               '#fffaf5',
             ].join(', '),
           }}
