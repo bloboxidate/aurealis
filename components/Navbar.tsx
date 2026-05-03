@@ -41,8 +41,13 @@ export default function Navbar() {
       }`}
     >
       <div className="max-w-[1600px] mx-auto pl-[max(0.5rem,env(safe-area-inset-left,0px))] pr-[max(0.5rem,env(safe-area-inset-right,0px))] sm:pl-[max(1.5rem,env(safe-area-inset-left,0px))] sm:pr-[max(1.5rem,env(safe-area-inset-right,0px))] lg:pl-[max(2.5rem,env(safe-area-inset-left,0px))] lg:pr-[max(2.5rem,env(safe-area-inset-right,0px))]">
-        <div className="relative flex w-full min-h-24 items-center justify-between gap-2 sm:min-h-[6.5rem] md:min-h-[7rem]">
-          <div className="relative z-20 flex shrink-0 items-center">
+        {/*
+          Three-column grid keeps the home logo in a real layout cell (not absolutely centered).
+          That avoids iOS Safari paint bugs with backdrop-blur + translate + next/image fill, and
+          prevents the logo from sitting under the menu/cart hit areas.
+        */}
+        <div className="relative grid w-full min-h-24 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-2 sm:min-h-[6.5rem] md:min-h-[7rem]">
+          <div className="relative z-20 flex shrink-0 items-center justify-self-start">
             <div className="hidden md:block">
               <NavMenuDropdown />
             </div>
@@ -66,15 +71,10 @@ export default function Navbar() {
             </button>
           </div>
 
-          {/*
-            Wrapper must sit above the side columns (z-20) on narrow screens; otherwise the
-            centered logo paints underneath the menu/cart flex items and disappears on phones.
-            pointer-events-none keeps taps passing through to the hamburger and cart outside the link box.
-          */}
-          <div className="pointer-events-none absolute inset-0 z-30">
+          <div className="relative z-10 flex min-w-0 justify-center justify-self-center px-0.5 isolate">
             <Link
               href={`/${locale}`}
-              className="group pointer-events-auto absolute left-1/2 top-1/2 z-0 block h-16 w-64 max-w-[min(18.5rem,calc(100%-8.5rem))] -translate-x-1/2 -translate-y-1/2 sm:h-20 sm:max-w-[min(22rem,calc(100%-8rem))] sm:w-72 md:h-20 md:max-w-[min(20rem,calc(100%-10rem))] md:w-64 lg:h-20 lg:max-w-[min(20rem,calc(100%-12rem))] lg:w-64 xl:h-[5.5rem] xl:max-w-[20rem] xl:w-[20rem] outline-none ring-0 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] md:group-hover:scale-[1.02]"
+              className="group flex h-16 w-full max-w-[min(18.5rem,min(92vw,calc(100vw-9.5rem)))] items-center justify-center outline-none ring-0 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:h-20 sm:max-w-[min(22rem,40rem)] md:max-w-[20rem] lg:max-w-[20rem] xl:h-[5.5rem] xl:max-w-[20rem] md:group-hover:scale-[1.02]"
             >
               <BrandWordmark
                 src="/logo-black.png"
@@ -82,15 +82,16 @@ export default function Navbar() {
                 width={480}
                 height={154}
                 contained
-                boxClassName="transition-transform duration-500"
+                layoutIntrinsic
+                boxClassName="transition-transform duration-500 h-full w-full"
                 className="opacity-[0.88] [filter:sepia(0.12)_saturate(0.9)_contrast(1.05)]"
-                sizes="(max-width: 640px) 320px, (max-width: 768px) 360px, 360px, 500px"
+                sizes="(max-width: 640px) 280px, (max-width: 768px) 360px, 500px"
                 priority
               />
             </Link>
           </div>
 
-          <div className="relative z-20 flex shrink-0 items-center gap-1.5 sm:gap-2 md:gap-4">
+          <div className="relative z-20 flex shrink-0 items-center justify-end justify-self-end gap-1.5 sm:gap-2 md:gap-4">
             <UserAuthNav />
             <Link
               href={`/${otherLocale}`}
