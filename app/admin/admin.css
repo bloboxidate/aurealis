@@ -1,0 +1,17 @@
+/* Scoped admin UI (avoids overriding storefront body/html in root layout). */
+.aurealis-admin {
+  box-sizing: border-box;
+  min-height: 100dvh;
+  margin: 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background: #0f1218;
+  color: #e8eaef;
+}
+.aurealis-admin *,
+.aurealis-admin *::before,
+.aurealis-admin *::after {
+  box-sizing: border-box;
+}
+.aurealis-admin a {
+  color: #7dd3a8;
+}

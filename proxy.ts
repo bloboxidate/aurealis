@@ -15,6 +15,10 @@ export async function proxy(request: NextRequest) {
     }
     return updateSession(request, NextResponse.next());
   }
+  /** Embedded admin lives outside `[locale]`; skip next-intl so `/admin` is not rewritten. */
+  if (request.nextUrl.pathname === '/admin' || request.nextUrl.pathname.startsWith('/admin/')) {
+    return updateSession(request, NextResponse.next());
+  }
   const intlResponse = intl(request);
   return updateSession(request, intlResponse);
 }
