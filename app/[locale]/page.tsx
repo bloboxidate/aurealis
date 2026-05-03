@@ -301,6 +301,10 @@ export default async function HomePage() {
         </section>
       </LuxuryReveal>
 
+      <div className="relative h-px mx-8 sm:mx-16 lg:mx-24" aria-hidden>
+        <div className="absolute inset-0 rounded-full" style={{ background: 'linear-gradient(to right, transparent, color-mix(in srgb, #f07840 40%, #8b7fd4 30%), color-mix(in srgb, #f5c431 35%, #6db35a 25%), transparent)' }} />
+      </div>
+
       <LuxuryReveal y={24} durationMs={1200} className="block">
         <section className="relative py-24 lg:py-32 overflow-hidden bg-transparent">
         <div
