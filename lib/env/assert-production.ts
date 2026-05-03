@@ -18,18 +18,8 @@ export function assertProductionConfiguration(): void {
     throw new Error('[env] Production NEXT_PUBLIC_SITE_URL must use https://');
   }
 
-  const paymob = [
-    process.env.PAYMOB_API_KEY,
-    process.env.PAYMOB_MERCHANT_ID,
-    process.env.PAYMOB_INTEGRATION_ID,
-    process.env.PAYMOB_HMAC_SECRET,
-  ];
-  const anyPaymob = paymob.some((v) => Boolean(v?.trim()));
-  const allPaymob = paymob.every((v) => Boolean(v?.trim()));
-  if (anyPaymob && !allPaymob) {
-    throw new Error(
-      '[env] Paymob: set all of PAYMOB_API_KEY, PAYMOB_MERCHANT_ID, PAYMOB_INTEGRATION_ID, PAYMOB_HMAC_SECRET, or omit all for demo-only checkout.'
-    );
+  if (!process.env.SARIEE_API_BEARER_TOKEN?.trim()) {
+    throw new Error('[env] Production requires SARIEE_API_BEARER_TOKEN for the product catalog and checkout.');
   }
 
   const supUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();

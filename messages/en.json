@@ -166,8 +166,6 @@
   },
   "checkout": {
     "title": "Checkout",
-    "demo_note": "If Paymob is not configured, you can still place a demo order for testing.",
-    "paymob_ready_note": "Card payments are enabled. You can pay with card (Paymob) or use the demo order option below for internal testing only.",
     "empty_title": "Your bag is empty",
     "empty_body": "Add something beautiful before you check out.",
     "back_cart": "Back to cart",
@@ -176,15 +174,13 @@
     "field_phone": "Phone",
     "field_address": "Address",
     "field_city": "City",
-    "payment_note": "Use \"Pay with card\" for production-style checkout once Paymob keys are set. \"Place demo order\" marks the order without charging a card.",
-    "place_order": "Place demo order",
-    "place_order_card": "Pay with card (Paymob)",
+    "field_promo": "Promo code (optional)",
+    "promo_placeholder": "Enter code",
+    "place_order": "Place order",
+    "placing_order": "Placing order…",
     "back_edit": "Back to edit cart",
-    "error_paymob_hmac": "We could not verify the payment redirect. If you were charged, contact support with your order reference.",
-    "error_payment_declined": "The card payment was not completed. You can try again or use another method.",
-    "error_rate_limited": "Too many payment attempts. Please wait a few minutes and try again.",
-    "error_generic": "Payment could not be started. Please try again or contact us.",
-    "card_redirecting": "Redirecting to secure card checkout…"
+    "error_rate_limited": "Too many attempts. Please wait a few minutes and try again.",
+    "error_generic": "Order could not be placed. Please try again or contact us."
   },
   "orderSuccess": {
     "title": "Thank you",
@@ -209,19 +205,20 @@
   "orders": {
     "title": "Order history",
     "kicker": "Account",
-    "intro": "Orders you complete in this browser are stored locally for reference until you clear site data.",
-    "empty": "No orders yet. When you check out, your orders will appear here on this device.",
+    "intro": "Your orders placed through this account.",
+    "empty": "No orders yet. Your orders will appear here after checkout.",
+    "sign_in_prompt": "Sign in to see your order history.",
     "egp": "EGP",
     "shop_cta": "Continue shopping"
   },
   "orderDetail": {
     "title": "Order details",
     "kicker": "Account",
-    "not_found": "We could not find this order. It may have been removed from this device or the link may be incorrect.",
+    "not_found": "We could not find this order. Check the reference or sign in to see your orders.",
     "ref": "Reference",
     "date": "Placed on",
     "ship_to": "Ship to",
-    "paymob_id": "Payment reference",
+    "status": "Status",
     "line_item": "Item",
     "qty": "Qty",
     "line_total": "Subtotal",
@@ -238,14 +235,13 @@
   "trackOrder": {
     "title": "Track an order",
     "kicker": "Service",
-    "intro": "Enter the order reference from your confirmation email and the same email address you used at checkout. Orders are matched to data stored in this browser.",
+    "intro": "Enter the order reference from your confirmation and the email address you used at checkout.",
     "field_ref": "Order reference",
     "field_email": "Email",
     "submit": "Look up order",
     "not_found": "No order matches those details. Check the reference and email, or contact us for help.",
     "found": "We found your order.",
-    "view_order": "Open order details",
-    "note": "If you clear browser storage or use another device, your history may not appear here. This is a local demo until accounts are live."
+    "view_order": "Open order details"
   },
   "returns": {
     "title": "Returns & refunds",

@@ -7,7 +7,6 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useCartStore } from '@/lib/store';
-import { setPendingCheckoutFromCart } from '@/lib/checkout-pending';
 
 function CheckoutForm() {
   const t = useTranslations('checkout');
@@ -18,40 +17,18 @@ function CheckoutForm() {
   const search = useSearchParams();
   const { items, total, clearCart } = useCartStore();
   const [mounted, setMounted] = useState(false);
-  const [cardReady, setCardReady] = useState(false);
-  const [cardInfoLoading, setCardInfoLoading] = useState(true);
-  const [cardRedirecting, setCardRedirecting] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [promoCode, setPromoCode] = useState('');
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    let c = true;
-    (async () => {
-      try {
-        const r = await fetch('/api/paymob/ready', { cache: 'no-store' });
-        const d = (await r.json()) as { cardPaymentsReady?: boolean };
-        if (c) setCardReady(!!d.cardPaymentsReady);
-      } catch {
-        if (c) setCardReady(false);
-      } finally {
-        if (c) setCardInfoLoading(false);
-      }
-    })();
-    return () => {
-      c = false;
-    };
-  }, []);
+  useEffect(() => { setMounted(true); }, []);
 
   const urlError = search.get('error');
   useEffect(() => {
-    if (urlError === 'paymob_hmac') setFormError('hmac');
-    else if (urlError === 'payment_declined') setFormError('declined');
-    else if (urlError === 'rate_limited' || urlError === 'rate') setFormError('rate');
-    else if (urlError) setFormError('generic');
-  }, [urlError]);
+    if (urlError === 'checkout_failed') setFormError(t('error_generic'));
+    else if (urlError === 'rate_limited') setFormError(t('error_rate_limited'));
+    else if (urlError) setFormError(t('error_generic'));
+  }, [urlError, t]);
 
   if (!mounted) {
     return (
@@ -92,89 +69,62 @@ function CheckoutForm() {
 
   const lineItems = items.map((i) => ({ productId: i.product.id, quantity: i.quantity }));
 
-  const onDemo = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
     if (!form.reportValidity()) return;
-    const fd = new FormData(form);
-    const fullName = String(fd.get('full_name') ?? '');
-    const email = String(fd.get('email') ?? '');
-    const phone = String(fd.get('phone') ?? '');
-    const address = String(fd.get('address') ?? '');
-    const city = String(fd.get('city') ?? '');
-    setPendingCheckoutFromCart(
-      items,
-      total(),
-      { fullName, email, phone, address, city },
-      'demo',
-      locale === 'ar' ? 'ar' : 'en'
-    );
-    const id = `AUR-${Date.now().toString(36).toUpperCase()}`;
-    clearCart();
-    router.push(`/${locale}/checkout/success?ref=${encodeURIComponent(id)}`);
-  };
 
-  const onPayWithCard = async (form: HTMLFormElement) => {
-    if (!form.reportValidity()) return;
     setFormError(null);
-    if (!cardReady) {
-      setFormError('generic');
-      return;
-    }
-    const fd = new FormData(form);
-    const fullName = String(fd.get('full_name') ?? '');
-    const email = String(fd.get('email') ?? '');
-    const phone = String(fd.get('phone') ?? '');
-    const address = String(fd.get('address') ?? '');
-    const city = String(fd.get('city') ?? '');
+    setSubmitting(true);
 
-    setCardRedirecting(true);
-    setPendingCheckoutFromCart(
-      items,
-      total(),
-      { fullName, email, phone, address, city },
-      'card',
-      locale === 'ar' ? 'ar' : 'en'
-    );
+    const fd = new FormData(form);
+    const payload = {
+      locale,
+      items: lineItems,
+      fullName: String(fd.get('full_name') ?? ''),
+      email: String(fd.get('email') ?? ''),
+      phone: String(fd.get('phone') ?? ''),
+      address: String(fd.get('address') ?? ''),
+      city: String(fd.get('city') ?? ''),
+      promoCode: promoCode.trim() || undefined,
+    };
+
     try {
-      const r = await fetch('/api/paymob/init', {
+      const r = await fetch('/api/sariee/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          locale,
-          items: lineItems,
-          fullName,
-          email,
-          phone,
-          address,
-          city,
-        }),
+        body: JSON.stringify(payload),
       });
-      const data = (await r.json()) as { iframeUrl?: string; error?: string };
-      if (!r.ok || !data.iframeUrl) {
-        if (r.status === 429) setFormError('rate');
-        else if (data.error === 'rate_limited') setFormError('rate');
-        else setFormError('generic');
-        setCardRedirecting(false);
+
+      const data = (await r.json()) as {
+        ref?: string;
+        paymentUrl?: string | null;
+        error?: string;
+        detail?: string;
+      };
+
+      if (!r.ok || !data.ref) {
+        setFormError(t('error_generic'));
+        if (process.env.NODE_ENV === 'development') {
+          console.error('[checkout]', data);
+        }
+        setSubmitting(false);
         return;
       }
-      window.location.assign(data.iframeUrl);
+
+      clearCart();
+
+      if (data.paymentUrl) {
+        window.location.assign(data.paymentUrl);
+        return;
+      }
+
+      router.push(`/${locale}/checkout/success?ref=${encodeURIComponent(data.ref)}`);
     } catch {
-      setFormError('generic');
-      setCardRedirecting(false);
+      setFormError(t('error_generic'));
+      setSubmitting(false);
     }
   };
-
-  const errMsg =
-    formError === 'hmac'
-      ? t('error_paymob_hmac')
-      : formError === 'declined'
-        ? t('error_payment_declined')
-        : formError === 'rate'
-          ? t('error_rate_limited')
-          : formError === 'generic'
-            ? t('error_generic')
-            : null;
 
   return (
     <>
@@ -187,19 +137,17 @@ function CheckoutForm() {
           >
             {t('title')}
           </h1>
-          <p className="text-xs text-muted mb-4" style={{ fontFamily: 'var(--font-ui)' }}>
-            {!cardInfoLoading && cardReady ? t('paymob_ready_note') : t('demo_note')}
-          </p>
-          {errMsg && (
+
+          {formError && (
             <p
               className="text-sm text-red-800/90 bg-red-50 border border-red-200/80 rounded-xl px-4 py-3 mb-6"
               style={{ fontFamily: 'var(--font-body)' }}
             >
-              {errMsg}
+              {formError}
             </p>
           )}
 
-          <form onSubmit={onDemo} className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-12" id="checkout-form">
+          <form onSubmit={onSubmit} className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-12">
             <div className="space-y-4">
               {(
                 [
@@ -253,6 +201,22 @@ function CheckoutForm() {
                   className="w-full rounded-xl border border-border bg-petal px-4 py-2.5 text-sm"
                 />
               </div>
+              <div>
+                <label
+                  className="block text-[10px] tracking-[0.3em] uppercase font-bold text-muted mb-1.5"
+                  style={{ fontFamily: 'var(--font-ui)' }}
+                >
+                  {t('field_promo')}
+                </label>
+                <input
+                  type="text"
+                  value={promoCode}
+                  onChange={(e) => setPromoCode(e.target.value)}
+                  placeholder={t('promo_placeholder')}
+                  className="w-full rounded-xl border border-border bg-petal px-4 py-2.5 text-sm text-ink"
+                  style={{ fontFamily: 'var(--font-body)' }}
+                />
+              </div>
             </div>
 
             <div className="space-y-4">
@@ -283,32 +247,13 @@ function CheckoutForm() {
                   </span>
                 </div>
               </div>
-              <p className="text-xs text-muted" style={{ fontFamily: 'var(--font-body)' }}>
-                {t('payment_note')}
-              </p>
-              {!cardInfoLoading && cardReady && (
-                <button
-                  type="button"
-                  form="checkout-form"
-                  disabled={cardRedirecting}
-                  onClick={() => {
-                    const f = document.getElementById('checkout-form') as HTMLFormElement | null;
-                    if (f) void onPayWithCard(f);
-                  }}
-                  className="w-full py-4 rounded-full bg-ink text-petal text-[10px] tracking-[0.35em] uppercase font-bold hover:bg-ink/90 transition-colors disabled:opacity-60"
-                  style={{ fontFamily: 'var(--font-ui)' }}
-                >
-                  {cardRedirecting ? t('card_redirecting') : t('place_order_card')}
-                </button>
-              )}
               <button
                 type="submit"
-                form="checkout-form"
-                disabled={cardRedirecting}
-                className="w-full py-4 rounded-full bg-apricot text-petal text-[10px] tracking-[0.35em] uppercase font-bold hover:bg-apricot-deep transition-colors disabled:opacity-50"
+                disabled={submitting}
+                className="w-full py-4 rounded-full bg-apricot text-petal text-[10px] tracking-[0.35em] uppercase font-bold hover:bg-apricot-deep transition-colors disabled:opacity-60"
                 style={{ fontFamily: 'var(--font-ui)' }}
               >
-                {t('place_order')}
+                {submitting ? t('placing_order') : t('place_order')}
               </button>
               <Link
                 href={`/${locale}/cart`}

@@ -6,6 +6,9 @@ import {
   fetchSingleProductById,
   fetchSingleProductBySlug,
   productsFromListJson,
+  fetchRelatedProducts,
+  fetchBestSellingProducts,
+  fetchRecommendedProducts,
 } from '@/lib/sariee/catalog-fetch';
 import { isSarieeConfigured } from '@/lib/sariee/config';
 
@@ -30,6 +33,21 @@ export async function getProductBySlug(slug: string): Promise<Product | undefine
   if (!isSarieeConfigured()) return undefined;
   const p = await fetchSingleProductBySlug(slug);
   return p ?? undefined;
+}
+
+export async function getRelatedProducts(productId: string): Promise<Product[]> {
+  if (!isSarieeConfigured()) return [];
+  return fetchRelatedProducts(productId);
+}
+
+export async function getBestSellingProducts(): Promise<Product[]> {
+  if (!isSarieeConfigured()) return [];
+  return fetchBestSellingProducts();
+}
+
+export async function getRecommendedProducts(): Promise<Product[]> {
+  if (!isSarieeConfigured()) return [];
+  return fetchRecommendedProducts();
 }
 
 export async function getProductsByIds(ids: string[]): Promise<Map<string, Product>> {

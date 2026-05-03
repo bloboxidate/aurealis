@@ -3,26 +3,44 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
-import { findOrderForTracking } from '@/lib/orders-persist';
 
 export function TrackOrderForm() {
   const t = useTranslations('trackOrder');
   const locale = useLocale();
   const [ref, setRef] = useState('');
   const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<'idle' | 'not_found' | 'found'>('idle');
   const [orderRef, setOrderRef] = useState('');
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setResult('idle');
-    const o = findOrderForTracking(ref.trim(), email);
-    if (!o) {
+    setLoading(true);
+
+    try {
+      const r = await fetch(`/api/sariee/order/${encodeURIComponent(ref.trim())}`, {
+        cache: 'no-store',
+      });
+      if (r.ok) {
+        const d = (await r.json()) as { order?: { email?: string; customer_email?: string } };
+        const orderEmail = String(d.order?.email ?? d.order?.customer_email ?? '').toLowerCase().trim();
+        const inputEmail = email.toLowerCase().trim();
+        // verify email matches if Sariee returned one; if Sariee didn't return email, just show the order
+        if (!orderEmail || orderEmail === inputEmail) {
+          setOrderRef(ref.trim());
+          setResult('found');
+        } else {
+          setResult('not_found');
+        }
+      } else {
+        setResult('not_found');
+      }
+    } catch {
       setResult('not_found');
-      return;
+    } finally {
+      setLoading(false);
     }
-    setOrderRef(o.ref);
-    setResult('found');
   };
 
   return (
@@ -61,10 +79,11 @@ export function TrackOrderForm() {
         </div>
         <button
           type="submit"
-          className="w-full py-3.5 rounded-full bg-apricot text-petal text-[10px] tracking-[0.3em] uppercase font-bold"
+          disabled={loading}
+          className="w-full py-3.5 rounded-full bg-apricot text-petal text-[10px] tracking-[0.3em] uppercase font-bold disabled:opacity-60"
           style={{ fontFamily: 'var(--font-ui)' }}
         >
-          {t('submit')}
+          {loading ? '…' : t('submit')}
         </button>
       </form>
 
@@ -81,10 +100,6 @@ export function TrackOrderForm() {
           </Link>
         </p>
       )}
-
-      <p className="text-xs text-muted" style={{ fontFamily: 'var(--font-ui)' }}>
-        {t('note')}
-      </p>
     </div>
   );
 }
