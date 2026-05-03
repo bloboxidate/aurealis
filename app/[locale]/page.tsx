@@ -18,14 +18,10 @@ function Sparkle({ className }: { className?: string }) {
 }
 
 const TICKER = [
-  'Modern & Minimal',
-  'Natural & Clean',
-  'Confident & Radiant',
-  'Aspirational but Accessible',
-  'Radiance',
-  'Purity',
-  'Timeless Beauty',
-  'Made in Cairo',
+  'Confident',
+  'Radiant',
+  'Minimal',
+  'Modern',
 ];
 
 export const dynamic = 'force-dynamic';

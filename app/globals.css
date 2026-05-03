@@ -1,32 +1,25 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-petal:   #fff9f3;
-  --color-honey:   #f7d595;
-  --color-sage:    #a5bf97;
-  --color-lavender:#bfb5e8;
-  --color-apricot: #f8ae7f;
-  --color-apricot-deep: color-mix(in srgb, #f8ae7f 72%, #a5bf97 28%);
-  --color-ink: oklch(from #a5bf97 calc(l * 0.42) calc(c * 0.95) h);
-  --color-ink-deep: oklch(from #a5bf97 calc(l * 0.28) calc(c * 0.9) h);
-  --color-ink-abyss: oklch(from #a5bf97 calc(l * 0.22) calc(c * 0.88) h);
-  --color-muted-foreground: color-mix(in srgb, #a5bf97 58%, #f7d595 28%, #f8ae7f 14%);
-  --color-border: color-mix(in srgb, #f7d595 42%, #fff9f3 58%);
+  /* Brand palette — from the Auréalis mood board */
+  --color-petal:   #fffaf5;           /* clean warm white */
+  --color-honey:   #f5c431;           /* bright gold */
+  --color-sage:    #6db35a;           /* vivid sage green */
+  --color-lavender:#8b7fd4;           /* richer lavender */
+  --color-apricot: #f07840;           /* brand orange — matches logo */
+  --color-apricot-deep: #d9612a;      /* pressed/hover orange */
+  --color-ink:     #1c1210;           /* rich warm near-black */
+  --color-ink-deep: #120c08;          /* deeper ink */
+  --color-ink-abyss: #0d0804;         /* darkest — ticker bar */
+  --color-muted-foreground: #7a6a62;  /* warm medium grey */
+  --color-border:  #ead9cc;           /* warm visible border */
   --color-cream:  var(--color-petal);
-  --color-light:  color-mix(in srgb, var(--color-petal) 55%, var(--color-honey) 45%);
+  --color-light:  #fdf0e6;
   --color-orange: var(--color-apricot);
   --color-orange-dark: var(--color-apricot-deep);
   --color-dark: var(--color-ink);
   --color-muted: var(--color-muted-foreground);
   --color-white: var(--color-petal);
-}
-
-@supports not (color: oklch(from #a5bf97 l c h)) {
-  :root {
-    --color-ink: #3d4a3a;
-    --color-ink-deep: #2a3328;
-    --color-ink-abyss: #1e251d;
-  }
 }
 
 html {
@@ -90,9 +83,9 @@ body {
 
 .mesh-hero {
   background:
-    radial-gradient(ellipse 80% 50% at 20% 40%, color-mix(in srgb, #f8ae7f 50%, transparent), transparent 55%),
-    radial-gradient(ellipse 60% 40% at 80% 20%, color-mix(in srgb, #bfb5e8 40%, transparent), transparent 50%),
-    radial-gradient(ellipse 50% 50% at 100% 80%, color-mix(in srgb, #a5bf97 35%, transparent), transparent 45%),
+    radial-gradient(ellipse 80% 50% at 20% 40%, color-mix(in srgb, #f07840 45%, transparent), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 80% 20%, color-mix(in srgb, #f5c431 30%, transparent), transparent 50%),
+    radial-gradient(ellipse 50% 50% at 100% 80%, color-mix(in srgb, #6db35a 25%, transparent), transparent 45%),
     var(--color-petal);
 }
 
@@ -117,7 +110,7 @@ body {
   pointer-events: none;
   background: radial-gradient(
     ellipse 55% 45% at 45% 55%,
-    color-mix(in srgb, #f8ae7f 22%, transparent),
+    color-mix(in srgb, #f07840 22%, transparent),
     transparent 58%
   );
   animation: mesh-ambient 22s ease-in-out infinite;
@@ -129,11 +122,11 @@ body {
 }
 
 .nav-elevate {
-  box-shadow: 0 1px 24px color-mix(in srgb, #a5bf97 12%, transparent);
+  box-shadow: 0 1px 24px color-mix(in srgb, #6db35a 12%, transparent);
 }
 
 .brand-gradient {
-  background: linear-gradient(135deg, #f8ae7f 0%, #f7d595 32%, #bfb5e8 58%, #a5bf97 100%);
+  background: linear-gradient(135deg, #f07840 0%, #f5c431 32%, #8b7fd4 58%, #6db35a 100%);
 }
 
 @keyframes marquee {
@@ -158,8 +151,8 @@ body {
 .animate-sparkle-drift { animation: sparkle-float 5s ease-in-out infinite 1.1s; }
 
 @keyframes cta-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, #f8ae7f 0%, transparent); }
-  50% { box-shadow: 0 0 32px 4px color-mix(in srgb, #f8ae7f 30%, #f7d595 20%); }
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, #f07840 0%, transparent); }
+  50% { box-shadow: 0 0 32px 4px color-mix(in srgb, #f07840 30%, #f5c431 20%); }
 }
 .btn-hero-cta {
   transition: transform var(--duration-lux-hover) var(--ease-luxury), background-color 0.35s var(--ease-luxury),
@@ -232,11 +225,11 @@ body {
   0%,
   100% {
     transform: scale(1);
-    filter: drop-shadow(0 0 6px color-mix(in srgb, #f8ae7f 40%, transparent));
+    filter: drop-shadow(0 0 6px color-mix(in srgb, #f07840 40%, transparent));
   }
   50% {
     transform: scale(1.1);
-    filter: drop-shadow(0 0 22px color-mix(in srgb, #f8ae7f 70%, #f7d595 20%));
+    filter: drop-shadow(0 0 22px color-mix(in srgb, #f07840 70%, #f5c431 20%));
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -245,7 +238,7 @@ body {
     animation: none !important;
   }
   .sparkle-loader-breathe {
-    filter: drop-shadow(0 0 10px color-mix(in srgb, #f8ae7f 45%, transparent));
+    filter: drop-shadow(0 0 10px color-mix(in srgb, #f07840 45%, transparent));
   }
   .mesh-hero--ambient::before {
     animation: none !important;
@@ -312,9 +305,9 @@ body {
   background: linear-gradient(
     100deg,
     transparent 0%,
-    color-mix(in srgb, #fff9f3 0%, transparent) 25%,
-    color-mix(in srgb, #fff9f3 50%, transparent) 48%,
-    color-mix(in srgb, #fff9f3 0%, transparent) 62%,
+    color-mix(in srgb, #fffaf5 0%, transparent) 25%,
+    color-mix(in srgb, #fffaf5 50%, transparent) 48%,
+    color-mix(in srgb, #fffaf5 0%, transparent) 62%,
     transparent 100%
   );
   animation: bento-sheen 11s var(--ease-luxury) infinite;
@@ -354,5 +347,5 @@ body {
   transition: box-shadow 0.6s var(--ease-luxury), transform 0.65s var(--ease-luxury);
 }
 .lux-card-lift:hover {
-  box-shadow: 0 28px 60px -12px color-mix(in srgb, #a5bf97 24%, transparent);
+  box-shadow: 0 28px 60px -12px color-mix(in srgb, #6db35a 24%, transparent);
 }
