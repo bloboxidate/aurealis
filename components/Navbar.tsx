@@ -66,10 +66,15 @@ export default function Navbar() {
             </button>
           </div>
 
-          <div className="pointer-events-none absolute inset-0 z-10">
+          {/*
+            Wrapper must sit above the side columns (z-20) on narrow screens; otherwise the
+            centered logo paints underneath the menu/cart flex items and disappears on phones.
+            pointer-events-none keeps taps passing through to the hamburger and cart outside the link box.
+          */}
+          <div className="pointer-events-none absolute inset-0 z-30">
             <Link
               href={`/${locale}`}
-              className="group pointer-events-auto absolute left-1/2 top-1/2 z-30 block h-16 w-64 max-w-[min(18.5rem,calc(100%-3.5rem))] -translate-x-1/2 -translate-y-1/2 sm:h-20 sm:max-w-[min(22rem,calc(100%-8rem))] sm:w-72 md:h-20 md:max-w-[min(20rem,calc(100%-10rem))] md:w-64 lg:h-20 lg:max-w-[min(20rem,calc(100%-12rem))] lg:w-64 xl:h-[5.5rem] xl:max-w-[20rem] xl:w-[20rem] outline-none ring-0 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] md:group-hover:scale-[1.02]"
+              className="group pointer-events-auto absolute left-1/2 top-1/2 z-0 block h-16 w-64 max-w-[min(18.5rem,calc(100%-8.5rem))] -translate-x-1/2 -translate-y-1/2 sm:h-20 sm:max-w-[min(22rem,calc(100%-8rem))] sm:w-72 md:h-20 md:max-w-[min(20rem,calc(100%-10rem))] md:w-64 lg:h-20 lg:max-w-[min(20rem,calc(100%-12rem))] lg:w-64 xl:h-[5.5rem] xl:max-w-[20rem] xl:w-[20rem] outline-none ring-0 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] md:group-hover:scale-[1.02]"
             >
               <BrandWordmark
                 src="/logo-black.png"
