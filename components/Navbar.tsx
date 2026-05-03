@@ -46,7 +46,7 @@ export default function Navbar() {
           regardless of how wide the left (menu) and right (auth/cart) sides are.
           Logo lives in a real grid cell — avoids iOS Safari paint bugs with backdrop-blur.
         */}
-        <div className="relative grid w-full min-h-36 grid-cols-[1fr_auto_1fr] items-center sm:min-h-44 md:min-h-48">
+        <div className="relative grid w-full min-h-28 grid-cols-[1fr_auto_1fr] items-center sm:min-h-32 md:min-h-36">
           <div className="relative z-20 flex shrink-0 items-center">
             <div className="hidden md:block">
               <NavMenuDropdown />
@@ -74,7 +74,7 @@ export default function Navbar() {
           <div className="relative z-10 flex items-center justify-center isolate px-2">
             <Link
               href={`/${locale}`}
-              className="group flex items-center justify-center outline-none ring-0 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] md:hover:scale-[1.02] h-28 w-[340px] sm:h-36 sm:w-[460px] md:h-40 md:w-[540px] lg:w-[600px] xl:h-44 xl:w-[660px]"
+              className="group flex items-center justify-center outline-none ring-0 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] md:hover:scale-[1.02] h-20 w-[240px] sm:h-24 sm:w-[340px] md:h-28 md:w-[420px] lg:w-[480px] xl:h-32 xl:w-[540px]"
             >
               <BrandWordmark
                 src="/logo-black.png"
@@ -95,8 +95,8 @@ export default function Navbar() {
             <UserAuthNav />
             <Link
               href={`/${otherLocale}`}
-              className="shrink-0 min-h-10 min-w-10 sm:min-h-12 sm:min-w-12 inline-flex items-center justify-center rounded-full border border-ink/12 bg-petal/50 px-2 sm:px-4 text-[10px] sm:text-sm tracking-[0.12em] sm:tracking-[0.2em] uppercase font-bold text-ink/60 hover:text-apricot hover:border-apricot/40 transition-colors"
-              style={{ fontFamily: 'var(--font-ui)' }}
+              className="shrink-0 min-h-10 min-w-10 sm:min-h-12 sm:min-w-12 inline-flex items-center justify-center rounded-full border border-ink/12 bg-petal/50 px-2 sm:px-4 text-[10px] sm:text-sm uppercase font-bold text-ink/60 hover:text-apricot hover:border-apricot/40 transition-colors"
+              style={{ fontFamily: 'var(--font-ui)', letterSpacing: otherLocale === 'ar' ? '0' : '0.2em' }}
             >
               {otherLocale === 'ar' ? 'عربي' : 'EN'}
             </Link>
@@ -154,8 +154,8 @@ export default function Navbar() {
                   key={key}
                   href={`/${locale}/${path}`}
                   onClick={() => setMenuOpen(false)}
-                  className="block py-3.5 -mx-1 px-1 text-sm tracking-[0.25em] uppercase font-semibold text-ink/60 active:text-apricot"
-                  style={{ fontFamily: 'var(--font-ui)' }}
+                  className="block py-3.5 -mx-1 px-1 text-sm uppercase font-semibold text-ink/60 active:text-apricot"
+                  style={{ fontFamily: 'var(--font-ui)', letterSpacing: locale === 'ar' ? '0' : '0.25em' }}
                 >
                   {t(key)}
                 </Link>

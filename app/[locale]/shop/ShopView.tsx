@@ -48,7 +48,7 @@ export default function ShopView({ products }: { products: Product[] }) {
             }}
             aria-hidden
           />
-          <div className="relative max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 pt-44 sm:pt-52 pb-12 lg:pt-40 lg:pb-16">
+          <div className="relative max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 pt-32 sm:pt-36 pb-12 lg:pt-40 lg:pb-16">
             <div className="flex flex-col lg:flex-row lg:items-end gap-8 lg:gap-16">
               <h1
                 className="text-[clamp(2.5rem,7vw,5rem)] font-light italic text-ink leading-[0.95] max-w-[12ch]"

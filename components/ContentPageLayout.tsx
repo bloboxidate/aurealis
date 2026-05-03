@@ -13,7 +13,7 @@ export function ContentPageLayout({ children, title, kicker }: Props) {
       <Navbar />
       <main className="min-h-screen bg-petal">
         <header className="border-b border-border/50 bg-light/40">
-          <div className="max-w-3xl mx-auto px-4 sm:px-6 py-20 sm:py-24 pt-44 sm:pt-52">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 py-20 sm:py-24 pt-32 sm:pt-36">
             {kicker && (
               <p
                 className="text-[10px] tracking-[0.45em] uppercase font-bold text-apricot mb-3"

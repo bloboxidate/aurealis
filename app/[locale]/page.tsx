@@ -46,7 +46,7 @@ export default async function HomePage() {
       <section
         className={`relative min-h-[100dvh] mesh-hero mesh-hero--ambient grain flex flex-col lg:flex-row overflow-hidden ${isRtl ? 'lg:flex-row-reverse' : ''}`}
       >
-        <div className="lg:w-1/2 flex flex-col justify-center px-6 sm:px-10 lg:pl-14 lg:pr-6 pt-44 pb-16 lg:py-0 lg:min-h-[100dvh]">
+        <div className="lg:w-1/2 flex flex-col justify-center px-6 sm:px-10 lg:pl-14 lg:pr-6 pt-36 pb-16 lg:py-0 lg:min-h-[100dvh]">
           <div className="reveal-children max-w-xl space-y-8">
             <p
               className="text-[10px] sm:text-xs tracking-[0.45em] uppercase font-bold text-apricot"

@@ -115,8 +115,8 @@ export function NavMenuDropdown() {
                   href={`/${locale}/${path}`}
                   role="menuitem"
                   onClick={() => setOpen(false)}
-                  className="block px-4 py-2.5 text-[10px] lg:text-[11px] tracking-[0.2em] uppercase font-semibold text-ink/55 hover:text-apricot hover:bg-apricot/5 transition-colors duration-300"
-                  style={{ fontFamily: 'var(--font-ui)' }}
+                  className="block px-4 py-2.5 text-[10px] lg:text-[11px] uppercase font-semibold text-ink/55 hover:text-apricot hover:bg-apricot/5 transition-colors duration-300"
+                  style={{ fontFamily: 'var(--font-ui)', letterSpacing: locale === 'ar' ? '0' : '0.2em' }}
                 >
                   {t(key)}
                   {key === 'wishlist' && wishCount > 0 && (

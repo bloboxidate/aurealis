@@ -14,7 +14,7 @@ export default async function CollectionsPage() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-petal pt-44 sm:pt-52 pb-20">
+      <div className="min-h-screen bg-petal pt-32 sm:pt-36 pb-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="mb-10">
             <p className="text-[10px] tracking-[0.3em] uppercase font-bold text-muted mb-2" style={{ fontFamily: 'var(--font-ui)' }}>

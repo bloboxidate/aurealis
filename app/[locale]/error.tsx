@@ -19,7 +19,7 @@ export default function Error({
   return (
     <>
       <Navbar />
-      <div className="min-h-[65vh] bg-petal flex flex-col items-center justify-center px-4 pt-44 sm:pt-52 pb-16 text-center max-w-lg mx-auto">
+      <div className="min-h-[65vh] bg-petal flex flex-col items-center justify-center px-4 pt-32 sm:pt-36 pb-16 text-center max-w-lg mx-auto">
         <h1
           className="text-2xl sm:text-3xl font-light italic text-ink mb-3"
           style={{ fontFamily: 'var(--font-display)' }}
