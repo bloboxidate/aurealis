@@ -4,13 +4,6 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import { signupErrorMessageKey } from '@/lib/auth/safe-user-message';
-import { getSupabaseBrowser } from '@/lib/supabase/client';
-
-function siteBase(): string {
-  if (typeof window !== 'undefined') return window.location.origin;
-  return process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-}
 
 export function SignupForm() {
   const t = useTranslations('auth');
@@ -20,41 +13,33 @@ export function SignupForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [info, setInfo] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    setInfo(null);
-    const supabase = getSupabaseBrowser();
-    if (!supabase) {
-      setError(t('error_missing_config'));
-      return;
-    }
-    const nextPath = `/${locale}/account`;
-    const redirect = `${siteBase()}/auth/callback?next=${encodeURIComponent(nextPath)}`;
     setPending(true);
     void (async () => {
-      const { data, error: err } = await supabase.auth.signUp({
-        email: email.trim(),
-        password,
-        options: {
-          emailRedirectTo: redirect,
-          data: { full_name: name.trim() || undefined },
-        },
+      const res = await fetch('/api/auth/sariee/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ name: name.trim() || undefined, email: email.trim(), password }),
       });
+      let msg: string | null = null;
+      try {
+        const j = (await res.json()) as { error?: string };
+        if (!res.ok && typeof j.error === 'string') msg = j.error;
+      } catch {
+        if (!res.ok) msg = t('error_signup_failed');
+      }
       setPending(false);
-      if (err) {
-        setError(t(signupErrorMessageKey(err)));
+      if (!res.ok) {
+        setError(msg ?? t('error_signup_failed'));
         return;
       }
-      if (data.session) {
-        await router.push(`/${locale}/account`);
-        router.refresh();
-        return;
-      }
-      setInfo(t('signup_confirm_email'));
+      await router.push(`/${locale}/account`);
+      router.refresh();
     })();
   };
 
@@ -67,14 +52,6 @@ export function SignupForm() {
           role="alert"
         >
           {error}
-        </p>
-      )}
-      {info && (
-        <p
-          className="text-sm text-ink/80 border border-sage/40 bg-light/30 rounded-2xl px-4 py-3"
-          style={{ fontFamily: 'var(--font-body)' }}
-        >
-          {info}
         </p>
       )}
       <div>

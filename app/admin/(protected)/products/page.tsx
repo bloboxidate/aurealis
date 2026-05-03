@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import { getServiceSupabase } from '@/lib/admin/supabase-service';
 import { DeleteProductButton } from './DeleteProductButton';
 import { ADMIN_BASE } from '@/lib/admin/const';
+import { listCompanyProducts } from '@/lib/sariee/company-products';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,16 +9,15 @@ export default async function ProductsListPage() {
   let rows: { id: string; slug: string; name_en: string; price_egp: number; in_stock: boolean; featured: boolean }[] = [];
   let err: string | null = null;
   try {
-    const sb = getServiceSupabase();
-    const { data, error } = await sb
-      .from('products')
-      .select('id, slug, name_en, price_egp, in_stock, featured')
-      .order('id', { ascending: true });
-    if (error) {
-      err = error.message;
-    } else {
-      rows = (data ?? []) as typeof rows;
-    }
+    const list = await listCompanyProducts();
+    rows = list.map((r) => ({
+      id: r.id,
+      slug: r.slug,
+      name_en: r.name_en,
+      price_egp: r.price_egp,
+      in_stock: r.in_stock,
+      featured: r.featured,
+    }));
   } catch (e) {
     err = e instanceof Error ? e.message : 'Failed to load products';
   }
@@ -28,9 +27,8 @@ export default async function ProductsListPage() {
       <div className="p-8 max-w-3xl text-slate-200">
         <h1 className="text-2xl font-semibold text-amber-200 mb-2">Products</h1>
         <p className="text-rose-400 text-sm">
-          {err} — check <code className="text-amber-100">NEXT_PUBLIC_SUPABASE_URL</code> and{' '}
-          <code className="text-amber-100">SUPABASE_SERVICE_ROLE_KEY</code> in this app&apos;s environment (e.g. Vercel) and that
-          the <code className="text-amber-100">products</code> table exists.
+          {err} — check <code className="text-amber-100">SARIEE_API_BEARER_TOKEN</code> and Sariee company access in
+          this app&apos;s environment (e.g. Vercel).
         </p>
       </div>
     );
@@ -48,7 +46,7 @@ export default async function ProductsListPage() {
         </Link>
       </div>
       {rows.length === 0 ? (
-        <p className="text-slate-500 text-sm">No products. Add one in Supabase (seed migration) or create here.</p>
+        <p className="text-slate-500 text-sm">No products from Sariee yet, or the list response shape does not match.</p>
       ) : (
         <div className="overflow-x-auto rounded border border-slate-700/60">
           <table className="w-full text-left text-sm">

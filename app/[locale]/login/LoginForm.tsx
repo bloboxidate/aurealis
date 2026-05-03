@@ -4,8 +4,6 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import { loginErrorMessageKey } from '@/lib/auth/safe-user-message';
-import { getSupabaseBrowser } from '@/lib/supabase/client';
 
 export function LoginForm() {
   const t = useTranslations('auth');
@@ -26,17 +24,24 @@ export function LoginForm() {
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    const supabase = getSupabaseBrowser();
-    if (!supabase) {
-      setError(t('error_missing_config'));
-      return;
-    }
     setPending(true);
     void (async () => {
-      const { error: err } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
+      const res = await fetch('/api/auth/sariee/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ email: email.trim(), password }),
+      });
+      let msg: string | null = null;
+      try {
+        const j = (await res.json()) as { error?: string };
+        if (!res.ok && typeof j.error === 'string') msg = j.error;
+      } catch {
+        if (!res.ok) msg = t('error_login_failed');
+      }
       setPending(false);
-      if (err) {
-        setError(t(loginErrorMessageKey(err)));
+      if (!res.ok) {
+        setError(msg ?? t('error_login_failed'));
         return;
       }
       await router.push(`/${locale}/account`);

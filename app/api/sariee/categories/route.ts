@@ -13,7 +13,7 @@ export async function GET(request: Request) {
   const next = new URL(request.url);
   const qs = next.searchParams.toString();
   const path = `/api/frontend/categories/all-categories${qs ? `?${qs}` : ''}`;
-  const upstream = await sarieeFetch(path, { method: 'GET' });
+  const upstream = await sarieeFetch(path, { method: 'GET', forwardFrom: request.headers });
   const body = await upstream.text();
   const ct = upstream.headers.get('content-type') ?? 'application/json';
   return new NextResponse(body, {

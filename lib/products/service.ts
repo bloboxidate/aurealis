@@ -1,73 +1,49 @@
 import 'server-only';
+
 import type { Product } from '@/lib/products/types';
-import type { Database } from '@/types/database';
-import { getSupabaseServer } from '@/lib/supabase/server';
-
-type ProductRow = Database['public']['Tables']['products']['Row'];
-
-export function mapRowToProduct(row: ProductRow): Product {
-  return {
-    id: row.id,
-    slug: row.slug,
-    name_en: row.name_en,
-    name_ar: row.name_ar,
-    description_en: row.description_en,
-    description_ar: row.description_ar,
-    price: row.price_egp,
-    category: row.category as Product['category'],
-    image: row.image,
-    in_stock: row.in_stock,
-    featured: row.featured,
-  };
-}
+import {
+  fetchSarieeListAllJson,
+  fetchSingleProductById,
+  fetchSingleProductBySlug,
+  productsFromListJson,
+} from '@/lib/sariee/catalog-fetch';
+import { isSarieeConfigured } from '@/lib/sariee/config';
 
 /**
- * Fetches all products from Supabase. Returns [] if not configured or on error.
+ * Product catalog from Sariee (`/api/frontend/products/list-all`, `single-product`).
+ * Requires `SARIEE_API_BEARER_TOKEN` (and valid Sariee store context).
  */
 export async function getAllProducts(): Promise<Product[]> {
-  const supabase = await getSupabaseServer();
-  if (!supabase) return [];
-  const { data, error } = await supabase.from('products').select('*').order('id', { ascending: true });
-  if (error) {
-    if (process.env.NODE_ENV === 'development') {
-      console.error('[getAllProducts]', error.message);
-    }
-    return [];
-  }
-  return (data as ProductRow[]).map(mapRowToProduct);
+  if (!isSarieeConfigured()) return [];
+  const json = await fetchSarieeListAllJson();
+  if (json == null) return [];
+  return productsFromListJson(json);
 }
 
 export async function getProductById(id: string): Promise<Product | undefined> {
-  const supabase = await getSupabaseServer();
-  if (!supabase) return undefined;
-  const { data, error } = await supabase.from('products').select('*').eq('id', id).maybeSingle();
-  if (error || !data) return undefined;
-  return mapRowToProduct(data as ProductRow);
+  if (!isSarieeConfigured()) return undefined;
+  const p = await fetchSingleProductById(id);
+  return p ?? undefined;
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | undefined> {
-  const supabase = await getSupabaseServer();
-  if (!supabase) return undefined;
-  const { data, error } = await supabase.from('products').select('*').eq('slug', slug).maybeSingle();
-  if (error || !data) return undefined;
-  return mapRowToProduct(data as ProductRow);
+  if (!isSarieeConfigured()) return undefined;
+  const p = await fetchSingleProductBySlug(slug);
+  return p ?? undefined;
 }
 
 export async function getProductsByIds(ids: string[]): Promise<Map<string, Product>> {
   const map = new Map<string, Product>();
   if (ids.length === 0) return map;
-  const supabase = await getSupabaseServer();
-  if (!supabase) return map;
-  const { data, error } = await supabase.from('products').select('*').in('id', [...new Set(ids)]);
-  if (error || !data) {
-    if (process.env.NODE_ENV === 'development' && error) {
-      console.error('[getProductsByIds]', error.message);
-    }
-    return map;
+  const all = await getAllProducts();
+  const want = new Set(ids);
+  for (const p of all) {
+    if (want.has(p.id)) map.set(p.id, p);
   }
-  for (const row of data as ProductRow[]) {
-    const p = mapRowToProduct(row);
-    map.set(p.id, p);
+  for (const id of ids) {
+    if (map.has(id)) continue;
+    const one = await fetchSingleProductById(id);
+    if (one) map.set(id, one);
   }
   return map;
 }

@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { ContentPageLayout } from '@/components/ContentPageLayout';
 import Link from 'next/link';
-import { getUser } from '@/lib/supabase/server';
+import { getCustomer } from '@/lib/auth/customer';
 import { getUserDisplayName } from '@/lib/auth/user-display-name';
 
 const LINKS: { hrefKey: 'orders' | 'wishlist' | 'track' | 'settings' | 'shop' | 'contact'; style: 'primary' | 'ghost' }[] = [
@@ -16,7 +16,7 @@ const LINKS: { hrefKey: 'orders' | 'wishlist' | 'track' | 'settings' | 'shop' | 
 export default async function AccountPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations('account');
-  const { user } = await getUser();
+  const { user } = await getCustomer();
   const paths: Record<(typeof LINKS)[number]['hrefKey'], string> = {
     orders: `/${locale}/account/orders`,
     wishlist: `/${locale}/wishlist`,

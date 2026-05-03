@@ -3,13 +3,11 @@
 import { useActionState } from 'react';
 import { updateProductAction, type ProductFormState } from './actions';
 import { ProductFields } from './ProductFields';
-import type { Database } from '@/types/database';
-
-type Row = Database['public']['Tables']['products']['Row'];
+import type { AdminProductRow } from '@/lib/admin/product-row';
 
 const initial: ProductFormState = null;
 
-export function EditForm({ product }: { product: Row }) {
+export function EditForm({ product }: { product: AdminProductRow }) {
   const [state, formAction, pending] = useActionState(updateProductAction, initial);
   return (
     <form action={formAction} className="space-y-6">
@@ -26,7 +24,7 @@ export function EditForm({ product }: { product: Row }) {
           description_en: product.description_en,
           description_ar: product.description_ar,
           price_egp: product.price_egp,
-          category: product.category,
+          category: product.category as 'skincare' | 'makeup' | 'fragrance',
           image: product.image,
           in_stock: product.in_stock,
           featured: product.featured,

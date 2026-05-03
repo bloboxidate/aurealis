@@ -42,6 +42,9 @@ export async function GET() {
       baseUrl: getSarieeBaseUrl(),
       upstreamStatus: upstream.status,
       proxyPattern: '/api/sariee/v1/{frontend|company}/… → Sariee /api/{frontend|company}/…',
+      webhookUrl: '/api/sariee/webhook',
+      forwardHeaders:
+        'If-Match, If-None-Match, Accept, Accept-Language, Idempotency-Key, X-Request-Id; optional SARIEE_EXTRA_FORWARD_HEADERS',
       ...devPayload,
     },
     { status: 200, headers: withNoStore() }

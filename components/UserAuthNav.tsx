@@ -4,33 +4,22 @@ import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import type { User } from '@supabase/supabase-js';
-import { getSupabaseBrowser } from '@/lib/supabase/client';
-import { getUserDisplayName } from '@/lib/auth/user-display-name';
+import { getUserDisplayName, type StorefrontAuthUser } from '@/lib/auth/user-display-name';
 
-function useAuthUser() {
-  const [user, setUser] = useState<User | null | undefined>(undefined);
+function useSarieeAuthUser() {
+  const [user, setUser] = useState<StorefrontAuthUser | null | undefined>(undefined);
   const [clientReady, setClientReady] = useState(false);
 
   useEffect(() => {
-    const supabase = getSupabaseBrowser();
-    if (!supabase) {
-      setUser(null);
-      setClientReady(true);
-      return;
-    }
     setClientReady(true);
-    const load = () => {
-      void supabase.auth.getUser().then(({ data, error }) => {
-        if (error) setUser(null);
-        else setUser(data.user ?? null);
-      });
-    };
-    load();
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-    return () => sub.subscription.unsubscribe();
+    void fetch('/api/auth/sariee/me', { credentials: 'same-origin' })
+      .then((r) => r.json() as Promise<{ user: StorefrontAuthUser | null }>)
+      .then((j) => {
+        const u = j.user;
+        if (u && (u.email || u.name)) setUser(u);
+        else setUser(null);
+      })
+      .catch(() => setUser(null));
   }, []);
 
   return { user, clientReady };
@@ -40,20 +29,18 @@ export function UserAuthNav() {
   const t = useTranslations('auth');
   const locale = useLocale();
   const router = useRouter();
-  const { user, clientReady } = useAuthUser();
-  const supabase = typeof window !== 'undefined' ? getSupabaseBrowser() : null;
+  const { user, clientReady } = useSarieeAuthUser();
 
   const signOut = useCallback(async () => {
-    if (!supabase) return;
-    await supabase.auth.signOut();
+    await fetch('/api/auth/sariee/logout', { method: 'POST', credentials: 'same-origin' });
     router.refresh();
-  }, [router, supabase]);
+  }, [router]);
 
   if (!clientReady) {
     return <div className="hidden md:block h-4 w-24 sm:w-32 rounded bg-ink/5 animate-pulse" aria-hidden />;
   }
 
-  if (user && supabase) {
+  if (user) {
     const name = getUserDisplayName(user);
     return (
       <div
@@ -106,15 +93,14 @@ export function UserAuthNavMobile({ onNavigate }: { onNavigate?: () => void }) {
   const t = useTranslations('auth');
   const locale = useLocale();
   const router = useRouter();
-  const { user, clientReady } = useAuthUser();
-  const supabase = getSupabaseBrowser();
+  const { user, clientReady } = useSarieeAuthUser();
   const go = onNavigate ?? (() => {});
 
   if (!clientReady) {
     return null;
   }
 
-  if (user && supabase) {
+  if (user) {
     const name = getUserDisplayName(user);
     return (
       <div className="space-y-3 pb-4 border-b border-border/50">
@@ -128,7 +114,7 @@ export function UserAuthNavMobile({ onNavigate }: { onNavigate?: () => void }) {
           type="button"
           onClick={async () => {
             go();
-            await supabase.auth.signOut();
+            await fetch('/api/auth/sariee/logout', { method: 'POST', credentials: 'same-origin' });
             router.refresh();
           }}
           className="block w-full text-left py-2 text-sm tracking-[0.25em] uppercase font-semibold text-ink/60"

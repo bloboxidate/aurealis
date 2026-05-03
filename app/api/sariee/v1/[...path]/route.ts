@@ -1,10 +1,13 @@
 import { getSarieeBaseUrl, getSarieeBearerToken } from '@/lib/sariee/config';
 import { buildSarieeAuthHeaders } from '@/lib/sariee/client';
+import { applySarieeForwardHeaders } from '@/lib/sariee/forward-headers';
 import { assertSarieeCompanyProxyAllowed } from '@/lib/sariee/proxy-guard';
 import { withNoStore } from '@/lib/security/secure-api-headers';
 import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
+/** Long Sariee exports / uploads; raise on Vercel Pro+ if you hit timeouts. */
+export const maxDuration = 60;
 
 /** e.g. script.js, forget-password, checkout-return */
 const SEGMENT_RE = /^[a-zA-Z0-9._-]+$/;
@@ -78,6 +81,7 @@ async function handle(request: Request, context: { params: Promise<{ path: strin
   }
 
   const headers = buildSarieeAuthHeaders();
+  applySarieeForwardHeaders(headers, request.headers);
   let body: BodyInit | undefined;
   if (!['GET', 'HEAD'].includes(method)) {
     const buf = await request.arrayBuffer();

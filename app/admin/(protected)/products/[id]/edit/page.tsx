@@ -1,16 +1,15 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getServiceSupabase } from '@/lib/admin/supabase-service';
 import { EditForm } from '../../EditForm';
 import { ADMIN_BASE } from '@/lib/admin/const';
+import { getCompanyProductById } from '@/lib/sariee/company-products';
 
 export const dynamic = 'force-dynamic';
 
 export default async function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const sb = getServiceSupabase();
-  const { data, error } = await sb.from('products').select('*').eq('id', id).maybeSingle();
-  if (error || !data) {
+  const data = await getCompanyProductById(id);
+  if (!data) {
     notFound();
   }
   return (

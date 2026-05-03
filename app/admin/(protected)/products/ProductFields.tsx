@@ -1,6 +1,4 @@
-import type { Database } from '@/types/database';
-
-type Row = Database['public']['Tables']['products']['Row'];
+import type { AdminProductRow } from '@/lib/admin/product-row';
 
 const CAT = [
   { v: 'skincare', l: 'Skincare' },
@@ -9,7 +7,7 @@ const CAT = [
 ] as const;
 
 type Defaults = Pick<
-  Row,
+  AdminProductRow,
   'id' | 'slug' | 'name_en' | 'name_ar' | 'description_en' | 'description_ar' | 'price_egp' | 'category' | 'image' | 'in_stock' | 'featured'
 >;
 
