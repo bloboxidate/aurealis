@@ -42,12 +42,12 @@ export default function Navbar() {
     >
       <div className="max-w-[1600px] mx-auto pl-[max(0.5rem,env(safe-area-inset-left,0px))] pr-[max(0.5rem,env(safe-area-inset-right,0px))] sm:pl-[max(1.5rem,env(safe-area-inset-left,0px))] sm:pr-[max(1.5rem,env(safe-area-inset-right,0px))] lg:pl-[max(2.5rem,env(safe-area-inset-left,0px))] lg:pr-[max(2.5rem,env(safe-area-inset-right,0px))]">
         {/*
-          Three-column grid keeps the home logo in a real layout cell (not absolutely centered).
-          That avoids iOS Safari paint bugs with backdrop-blur + translate + next/image fill, and
-          prevents the logo from sitting under the menu/cart hit areas.
+          1fr · auto · 1fr grid guarantees the logo column is always mathematically centred
+          regardless of how wide the left (menu) and right (auth/cart) sides are.
+          Logo lives in a real grid cell — avoids iOS Safari paint bugs with backdrop-blur.
         */}
-        <div className="relative grid w-full min-h-24 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-2 sm:min-h-[6.5rem] md:min-h-[7rem]">
-          <div className="relative z-20 flex shrink-0 items-center justify-self-start">
+        <div className="relative grid w-full min-h-24 grid-cols-[1fr_auto_1fr] items-center sm:min-h-[6.5rem] md:min-h-[7rem]">
+          <div className="relative z-20 flex shrink-0 items-center">
             <div className="hidden md:block">
               <NavMenuDropdown />
             </div>
@@ -71,10 +71,10 @@ export default function Navbar() {
             </button>
           </div>
 
-          <div className="relative z-10 flex min-w-0 justify-center justify-self-center px-0.5 isolate">
+          <div className="relative z-10 flex items-center justify-center isolate px-2">
             <Link
               href={`/${locale}`}
-              className="group flex h-16 w-full max-w-[min(18.5rem,min(92vw,calc(100vw-9.5rem)))] items-center justify-center outline-none ring-0 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:h-20 sm:max-w-[min(22rem,40rem)] md:max-w-[20rem] lg:max-w-[20rem] xl:h-[5.5rem] xl:max-w-[20rem] md:group-hover:scale-[1.02]"
+              className="group flex items-center justify-center outline-none ring-0 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] md:hover:scale-[1.02] h-16 w-[200px] sm:h-20 sm:w-[280px] md:w-[340px] lg:w-[400px] xl:h-[5.5rem] xl:w-[440px]"
             >
               <BrandWordmark
                 src="/logo-black.png"
@@ -85,7 +85,7 @@ export default function Navbar() {
                 layoutIntrinsic
                 boxClassName="transition-transform duration-500 h-full w-full"
                 className="opacity-[0.88] [filter:sepia(0.12)_saturate(0.9)_contrast(1.05)]"
-                sizes="(max-width: 640px) 280px, (max-width: 768px) 360px, 500px"
+                sizes="(max-width: 640px) 200px, (max-width: 768px) 280px, (max-width: 1024px) 340px, 440px"
                 priority
               />
             </Link>
