@@ -106,12 +106,19 @@ export async function updateCompanyProduct(row: CompanyProductUpsert & { id: str
 }
 
 export async function deleteCompanyProduct(id: string): Promise<{ ok: true } | { ok: false; message: string }> {
-  let res = await sarieeFetch('/api/company/product', { method: 'DELETE', json: { id } });
-  let json = await readJson(res);
-  if (!res.ok) {
-    res = await sarieeFetch(`/api/company/product?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
+  // API doc specifies product_barcode_id; fall back to product_id in case the store uses
+  // a different identifier column.
+  const attempts = [
+    { product_barcode_id: id },
+    { product_id: id },
+  ];
+  let res!: Response;
+  let json: unknown;
+  for (const body of attempts) {
+    res = await sarieeFetch('/api/company/product', { method: 'DELETE', json: body });
     json = await readJson(res);
+    if (res.ok) return { ok: true };
+    if (res.status !== 422 && res.status !== 400 && res.status !== 404) break;
   }
-  if (!res.ok) return { ok: false, message: sarieeUpstreamMessage(json, `Delete failed (${res.status})`) };
-  return { ok: true };
+  return { ok: false, message: sarieeUpstreamMessage(json, `Delete failed (${res.status})`) };
 }

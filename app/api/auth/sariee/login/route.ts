@@ -42,7 +42,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'email_and_password_required' }, { status: 400, headers: withNoStore() });
   }
 
-  const attempts = [{ email, password }, { login: email, password }, { email_address: email, password }];
+  // Try `email` first (standard Laravel), fall back to `login` if validation rejects the field name.
+  const attempts = [{ email, password }, { login: email, password }];
   let upstream: Response | null = null;
   let text = '';
   for (const json of attempts) {

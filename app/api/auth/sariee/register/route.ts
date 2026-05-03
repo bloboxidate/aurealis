@@ -43,10 +43,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'email_and_password_required' }, { status: 400, headers: withNoStore() });
   }
 
+  // Try `name` first (standard), fall back to `full_name` if the field is rejected.
   const attempts = [
-    { email, password, name: name || undefined, full_name: name || undefined },
-    { email, password, full_name: name },
-    { email_address: email, password, name },
+    { email, password, name: name || undefined },
+    { email, password, full_name: name || undefined },
   ];
   let upstream: Response | null = null;
   let text = '';
@@ -64,11 +64,13 @@ export async function POST(request: Request) {
       { status: upstream?.status ?? 502, headers: withNoStore() }
     );
   }
-
-  const res = NextResponse.json({ ok: true, needsEmailConfirm: false }, { headers: withNoStore() });
   const opts = sessionCookieOpts();
   const session = parseSarieeSessionFromHeaders(upstream.headers);
   const bearer = parseBearerLikeFromJson(json);
+  // If Sariee returned no session or bearer token the account was created but is not
+  // yet active (email confirmation required).
+  const needsEmailConfirm = !session && !bearer;
+  const res = NextResponse.json({ ok: true, needsEmailConfirm }, { headers: withNoStore() });
   if (session) {
     res.cookies.set(SARIEE_SESSION_COOKIE, session, opts);
   } else if (bearer) {

@@ -52,14 +52,11 @@ export function productFromSingleJson(json: unknown): Product | null {
   return mapSarieeItemToProduct(payload);
 }
 
-/** Try common query keys used by Sariee / Laravel storefronts. */
+/** Try the two most common query key patterns for Sariee / Laravel storefronts. */
 export async function fetchSingleProductBySlug(slug: string): Promise<Product | null> {
   const tries: Record<string, string>[] = [
     { slug },
     { seo_link: slug },
-    { seo_link: `products/${slug}` },
-    { handle: slug },
-    { id: slug },
   ];
   for (const q of tries) {
     const json = await fetchSarieeSingleProductJson(q);

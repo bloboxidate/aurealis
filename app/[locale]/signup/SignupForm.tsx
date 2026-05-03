@@ -27,15 +27,21 @@ export function SignupForm() {
         body: JSON.stringify({ name: name.trim() || undefined, email: email.trim(), password }),
       });
       let msg: string | null = null;
+      let needsEmailConfirm = false;
       try {
-        const j = (await res.json()) as { error?: string };
+        const j = (await res.json()) as { error?: string; needsEmailConfirm?: boolean };
         if (!res.ok && typeof j.error === 'string') msg = j.error;
+        if (res.ok) needsEmailConfirm = !!j.needsEmailConfirm;
       } catch {
         if (!res.ok) msg = t('error_signup_failed');
       }
       setPending(false);
       if (!res.ok) {
         setError(msg ?? t('error_signup_failed'));
+        return;
+      }
+      if (needsEmailConfirm) {
+        setError(t('signup_confirm_email'));
         return;
       }
       await router.push(`/${locale}/account`);
