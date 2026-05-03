@@ -240,7 +240,7 @@ export default async function HomePage() {
       </LuxuryReveal>
 
       <LuxuryReveal y={20} durationMs={1100} className="block">
-        <section className="bg-[color-mix(in_srgb,#fff9f3_70%,#f7d595_30%)] py-20 lg:py-28">
+        <section className="relative py-20 lg:py-28" style={{ background: ['radial-gradient(ellipse 90% 60% at 0% 100%, color-mix(in srgb, #f07840 30%, transparent), transparent 60%)', 'radial-gradient(ellipse 80% 50% at 100% 100%, color-mix(in srgb, #8b7fd4 25%, transparent), transparent 55%)', 'radial-gradient(ellipse 70% 50% at 50% 100%, color-mix(in srgb, #6db35a 20%, transparent), transparent 55%)', 'linear-gradient(to bottom, #fffaf5 0%, color-mix(in srgb, #fffaf5 55%, transparent) 70%, transparent 100%)'].join(', ') }}>
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 lg:mb-16">
             <div>
